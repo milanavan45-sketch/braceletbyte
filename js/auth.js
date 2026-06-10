@@ -1,6 +1,5 @@
 // Firebase 认证模块
 // 重要：请将下面的 firebaseConfig 替换为你在 Firebase 控制台复制的配置
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
   getAuth, 
@@ -10,15 +9,27 @@ import {
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// 🔧 替换为你的 Firebase 配置（从 Firebase 控制台复制）
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyC_VAyPp2j845Klr9SY4uv0qus1MBODvew",
+  authDomain: "braceletbyte.firebaseapp.com",
+  projectId: "braceletbyte",
+  storageBucket: "braceletbyte.firebasestorage.app",
+  messagingSenderId: "256044354969",
+  appId: "1:256044354969:web:4371212a36bffc5a6dd708",
+  measurementId: "G-8WZTD03DGJ"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 // 初始化 Firebase
 const app = initializeApp(firebaseConfig);
