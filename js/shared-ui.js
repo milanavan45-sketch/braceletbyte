@@ -165,12 +165,26 @@ function augmentHeader() {
   themeBtn.setAttribute('aria-label', 'Toggle light and dark mode');
   themeBtn.innerHTML = '<span class="theme-icon" aria-hidden="true">🌙</span>';
 
+  const signUpBtn = document.createElement('button');
+  signUpBtn.type = 'button';
+  signUpBtn.id = 'signUpBtn';
+  signUpBtn.className = 'account-btn';
+  signUpBtn.setAttribute('aria-label', 'Sign up for BraceletByte');
+  signUpBtn.textContent = 'Sign Up';
+
+  const loginBtn = document.createElement('button');
+  loginBtn.type = 'button';
+  loginBtn.id = 'loginBtn';
+  loginBtn.className = 'account-btn';
+  loginBtn.setAttribute('aria-label', 'Log in to BraceletByte');
+  loginBtn.textContent = 'Log In';
+
   const accountBtn = document.createElement('button');
   accountBtn.type = 'button';
-  accountBtn.id = 'accountBtn';
-  accountBtn.className = 'account-btn';
-  accountBtn.setAttribute('aria-label', 'Sign up or view account');
-  accountBtn.innerHTML = '<span aria-hidden="true">✨</span> <span id="accountLabel">Sign Up</span>';
+  accountBtn.id = 'authAccountBtn';
+  accountBtn.className = 'icon-btn';
+  accountBtn.setAttribute('aria-label', 'Open account menu');
+  accountBtn.innerHTML = '👤';
 
   const sizeBtn = document.createElement('button');
   sizeBtn.type = 'button';
@@ -182,10 +196,23 @@ function augmentHeader() {
   actions.insertBefore(themeBtn, actions.firstChild);
   actions.insertBefore(sizeBtn, actions.firstChild);
   actions.insertBefore(accountBtn, actions.firstChild);
+  actions.insertBefore(loginBtn, actions.firstChild);
+  actions.insertBefore(signUpBtn, actions.firstChild);
 
   themeBtn.addEventListener('click', toggleTheme);
-  accountBtn.addEventListener('click', () => openModal('signupModal'));
   sizeBtn.addEventListener('click', () => openModal('sizeGuideModal'));
+  signUpBtn.addEventListener('click', () => {
+    const user = getUser();
+    if (user) showUserMenu(); else openModal('signupModal');
+  });
+  loginBtn.addEventListener('click', () => {
+    const user = getUser();
+    if (user) showUserMenu(); else openModal('signupModal');
+  });
+  accountBtn.addEventListener('click', () => {
+    const user = getUser();
+    if (user) showUserMenu(); else openModal('signupModal');
+  });
 
   updateAccountButton();
 }
@@ -329,6 +356,19 @@ function initChat() {
   });
 
   document.getElementById('chatClose')?.addEventListener('click', closeChat);
+  document.getElementById('openChatService')?.addEventListener('click', () => {
+    closeChat();
+    const open = panel.hidden;
+    if (open) {
+      panel.hidden = false;
+      fab.setAttribute('aria-expanded', 'true');
+      input.focus();
+      if (!panel.dataset.greeted) {
+        addChatMsg('bot', "Hi! I'm Byte ✨ Ask me about products, shipping, customizing, or accessibility!");
+        panel.dataset.greeted = '1';
+      }
+    }
+  });
 
   form?.addEventListener('submit', e => {
     e.preventDefault();
@@ -403,22 +443,113 @@ function showVisualAlert(msg) {
   setTimeout(() => { el.hidden = true; }, 4000);
 }
 
-const USER_KEY = 'bb_user';
+const USER_KEY = 'braceletbyte_user';
 function getUser() {
   try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch { return null; }
 }
 function saveUser(user) {
+  if (!user) {
+    localStorage.removeItem(USER_KEY);
+    return;
+  }
   localStorage.setItem(USER_KEY, JSON.stringify({ ...user, signedUp: true }));
 }
+
+function getOrderHistory() {
+  try { return JSON.parse(localStorage.getItem('braceletbyte_orders')) || []; } catch { return []; }
+}
+
+function saveOrderHistory(orders) {
+  localStorage.setItem('braceletbyte_orders', JSON.stringify(orders));
+}
+
+function recordOrder(order) {
+  const orders = getOrderHistory();
+  orders.unshift(order);
+  saveOrderHistory(orders);
+}
+
+function getLoggedInUser() {
+  return window.auth?.getCurrentUser?.() || getUser();
+}
+
 function updateAccountButton() {
-  const user = getUser();
-  const label = document.getElementById('accountLabel');
-  const btn = document.getElementById('accountBtn');
-  if (label && user?.name) {
-    label.textContent = user.name.split(' ')[0];
-    btn?.setAttribute('aria-label', `Signed in as ${user.name}. Click to update profile.`);
+  const user = getLoggedInUser();
+  const signUpBtn = document.getElementById('signUpBtn');
+  const loginBtn = document.getElementById('loginBtn');
+  const accountBtn = document.getElementById('authAccountBtn');
+
+  if (signUpBtn) {
+    signUpBtn.textContent = user ? 'Profile' : 'Sign Up';
+    signUpBtn.setAttribute('aria-label', user ? 'View profile' : 'Sign up for BraceletByte');
+  }
+  if (loginBtn) {
+    loginBtn.textContent = user ? 'Account' : 'Log In';
+    loginBtn.setAttribute('aria-label', user ? 'View account menu' : 'Log in to BraceletByte');
+  }
+  if (accountBtn) {
+    if (user && !user.isGuest) {
+      const initial = (user.name?.[0] || user.email?.[0] || 'U').toUpperCase();
+      accountBtn.innerHTML = `<span style="font-weight:600;font-size:14px;">${initial}</span>`;
+      accountBtn.title = `Signed in as ${user.name || user.email}`;
+    } else if (user?.isGuest) {
+      accountBtn.innerHTML = '🎮';
+      accountBtn.title = 'Guest Mode';
+    } else {
+      accountBtn.innerHTML = '👤';
+      accountBtn.title = 'Sign In';
+    }
   }
 }
+
+function showUserMenu() {
+  const user = getLoggedInUser();
+  if (!user) return;
+
+  const existingMenu = document.getElementById('userMenuDropdown');
+  if (existingMenu) existingMenu.remove();
+
+  const menuHtml = `
+    <div id="userMenuDropdown" class="user-menu-dropdown">
+      <div class="user-menu-info">
+        <div class="user-menu-name">${user.name || (user.isGuest ? 'Guest User' : 'Bracelet Lover')}</div>
+        <div class="user-menu-email">${user.email || (user.isGuest ? 'Local mode' : 'Signed in')}</div>
+      </div>
+      ${!user.isGuest ? '<div class="user-menu-badge">✨ Logged in</div>' : '<div class="user-menu-badge guest">🎮 Guest Mode</div>'}
+      <div class="user-menu-divider"></div>
+      <button id="userMenuSignOut" class="user-menu-item signout">🚪 Sign Out</button>
+    </div>
+  `;
+
+  const btn = document.getElementById('authAccountBtn');
+  if (btn) {
+    btn.insertAdjacentHTML('afterend', menuHtml);
+    const menu = document.getElementById('userMenuDropdown');
+    const rect = btn.getBoundingClientRect();
+    menu.style.position = 'fixed';
+    menu.style.top = `${rect.bottom + 8}px`;
+    menu.style.right = `${window.innerWidth - rect.right}px`;
+    const closeMenu = (e) => {
+      if (!menu.contains(e.target) && e.target !== btn) {
+        menu.remove();
+        document.removeEventListener('click', closeMenu);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', closeMenu), 10);
+    document.getElementById('userMenuSignOut')?.addEventListener('click', () => {
+      window.auth?.signOut?.();
+      saveUser(null);
+      menu.remove();
+      updateAccountButton();
+    });
+  }
+}
+
+// 监听用户变化
+window.addEventListener('userChanged', () => {
+  updateAccountButton();
+  if (typeof updateCartBadge === 'function') updateCartBadge();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   injectSharedUI();

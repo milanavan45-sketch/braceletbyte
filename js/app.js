@@ -12,6 +12,9 @@ const CATEGORIES = [
   { id: 'stackable', emoji: '🔗', label: 'Stackable' },
   { id: 'vintage', emoji: '🕰️', label: 'Vintage' },
   { id: 'eco', emoji: '🌿', label: 'Eco' },
+  { id: 'yarn', emoji: '🧶', label: 'Yarn' },
+  { id: 'necklace', emoji: '📿', label: 'Necklace' },
+  { id: 'earring', emoji: '💎', label: 'Earring' },
   { id: 'minimalist', emoji: '◽', label: 'Minimalist' },
   { id: 'custom', emoji: '🎨', label: 'Custom' }
 ];
@@ -56,6 +59,15 @@ const PRODUCTS = [
   { id: 'eco-cork', name: 'Eco Cork Band', material: 'Cork & Hemp · Vegan', price: 32, emoji: '🌿', bg: 'linear-gradient(135deg,#E8F5E8,#B8DEB8)', cat: 'eco', badge: 'new',
     desc: 'Lightweight cork and hemp — planet-friendly and super comfy.',
     mfg: { origin: 'Cork from Portugal, assembled in Berlin', materials: ['Natural cork', 'Hemp cord', 'Wood bead'], steps: ['Cork sliced', 'Hemp braided', 'Bead knotted'], lead: '3–4 days', eco: '🌍 100% vegan & biodegradable' }},
+  { id: 'stitched-yarn', name: 'Stitched Yarn Wrap', material: 'Organic Yarn · Soft Tie', price: 26, emoji: '🧶', bg: 'linear-gradient(135deg,#FFF0E9,#FFC2B5)', cat: 'yarn',
+    desc: 'Soft organic yarn wraps for gentle, playful texture and bright color.',
+    mfg: { origin: 'Crafted in Portland, OR', materials: ['Organic cotton yarn', 'Embroidery thread'], steps: ['Hand-stitch', 'Patterned wrap', 'Tied with care'], lead: '2–3 days', eco: '🌿 Vegan yarn and low-waste dye' }},
+  { id: 'sunset-necklace', name: 'Sunset Pendant Necklace', material: 'Gold Fill · Shell Charm', price: 54, emoji: '🌅', bg: 'linear-gradient(135deg,#FFF0CE,#FFD4A6)', cat: 'necklace', badge: 'hot',
+    desc: 'A warm pendant necklace with beachy shell charm and subtle shine.',
+    mfg: { origin: 'Designed in Miami, made in LA', materials: ['Gold fill', 'Shell charm', 'Adjustable chain'], steps: ['Chain finished', 'Charm attached', 'Polished'], lead: '3–5 days', eco: '♻️ Gold fill with minimal mining' }},
+  { id: 'opal-drop-ears', name: 'Opal Drop Earrings', material: 'Sterling Silver · Opal', price: 42, emoji: '💎', bg: 'linear-gradient(135deg,#E8F2FF,#C7D8FF)', cat: 'earring',
+    desc: 'Playful opal drops that match your bracelet stack or necklace sets.',
+    mfg: { origin: 'Made in Seattle', materials: ['925 sterling silver', 'Lab opal'], steps: ['Stone set', 'Earring formed', 'Polished'], lead: '4–6 days', eco: '🌱 Recycled metals' }},
   { id: 'minimal-bar', name: 'Whisper Thin Bar', material: 'Sterling Silver · 1mm', price: 38, emoji: '◽', bg: 'linear-gradient(135deg,#F5F5F5,#E0E0E0)', cat: 'minimalist',
     desc: 'Ultra-thin bar bracelet — barely there, always noticed.',
     mfg: { origin: 'Minimalist studio in Copenhagen-style workshop, NYC', materials: ['925 sterling', '1mm profile'], steps: ['Bar drawn', 'Ends rounded', 'Mirror polish'], lead: '2–4 days', eco: '♻️ Recycled sterling' }}
@@ -210,6 +222,13 @@ function toggleWish(btn) {
 }
 
 function openProductModal(id) {
+  const user = getUser();
+  if (!user) {
+    openModal('signupModal');
+    showToast('Please sign in or sign up to view product details.');
+    return;
+  }
+
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
   currentModalProduct = p;
@@ -303,6 +322,11 @@ function initProductsPage() {
     bindProductGrid(grid);
   }
   document.getElementById('searchInput')?.addEventListener('input', e => handleSearch(e.target.value));
+  const urlCat = new URLSearchParams(window.location.search).get('cat');
+  if (urlCat) {
+    const chip = document.querySelector(`.cat-chip[data-cat="${urlCat}"]`);
+    if (chip) filterProducts(urlCat, chip);
+  }
 }
 
 function filterProducts(cat, btn) {
@@ -415,10 +439,36 @@ function renderCartPage() {
   const container = document.getElementById('cartContent');
   if (!container) return;
 
+  function renderOrderHistory() {
+    const orders = getOrderHistory();
+    if (!orders.length) {
+      return `<div class="order-history"><h2>Order History</h2><p>No orders yet. Place one to see it here, and enjoy easy returns.</p><p><strong>Returns:</strong> 30-day hassle-free returns on standard pieces.</p></div>`;
+    }
+    return `
+      <div class="order-history">
+        <h2>Order History</h2>
+        ${orders.map(order => `
+          <div class="order-card">
+            <div class="order-card-header">
+              <strong>${order.date}</strong>
+              <span>${order.total}</span>
+            </div>
+            <div class="order-card-items">
+              ${order.items.map(item => `<div>${item.name}${item.qty > 1 ? ' × ' + item.qty : ''} — $${(item.price * item.qty).toFixed(2)}</div>`).join('')}
+            </div>
+            <div class="order-card-meta">
+              <span>Status: ${order.status}</span>
+              <span>Returns: ${order.return}</span>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }
+
   function render() {
     const cart = getCart();
+    const ordersHtml = renderOrderHistory();
     if (!cart.length) {
-      container.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon" aria-hidden="true">🛍️</div><h2>Your cart is empty</h2><p>Add bracelets from our shop or create your own!</p><a href="products.html" class="btn-primary">Browse Products</a> <a href="customize.html" class="btn-secondary" style="margin-left:12px">Customize</a></div>`;
+      container.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon" aria-hidden="true">🛍️</div><h2>Your cart is empty</h2><p>Add bracelets from our shop or create your own!</p><a href="products.html" class="btn-primary">Browse Products</a> <a href="customize.html" class="btn-secondary" style="margin-left:12px">Customize</a></div>${ordersHtml}`;
       return;
     }
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -441,7 +491,8 @@ function renderCartPage() {
         <div class="summary-row total"><span>Total</span><span>$${(subtotal + shipping).toFixed(2)}</span></div>
         <p class="checkout-note" role="note">🔒 No card details ever — we only ask for your name</p>
         <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout 💌</button>
-      </div>`;
+      </div>
+      ${ordersHtml}`;
 
     container.querySelectorAll('[data-remove]').forEach(btn => {
       btn.addEventListener('click', () => { removeFromCart(btn.dataset.remove); showToast('Item removed'); render(); });
@@ -465,6 +516,18 @@ function startCheckout() {
       const name = document.getElementById('checkoutName').value.trim();
       if (!name) return;
       saveUser?.({ name, email: getUser?.()?.email || '' });
+      const cart = getCart();
+      const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const shipping = subtotal >= 75 ? 0 : 5.99;
+      const total = subtotal + shipping;
+      const order = {
+        date: new Date().toLocaleString(),
+        total: `$${total.toFixed(2)}`,
+        items: cart.map(item => ({ name: item.name, qty: item.qty, price: item.price })),
+        status: 'Confirmed',
+        return: '30-day return available'
+      };
+      recordOrder(order);
       saveCart([]);
       closeModal('checkoutModal');
       showToast(`Thank you, ${name}! Order placed 🎉`);

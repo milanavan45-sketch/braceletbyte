@@ -98,9 +98,9 @@
     <p class="section-desc">From pearl strands to eco cork bands — every piece is cute, crafted, and made with love. Click any product to zoom in and see how it's made!</p>
   </div>
   <div class="info-grid">
-    <div class="info-card"><div class="info-icon" aria-hidden="true">📿</div><h3>Beaded & Gemstone</h3><p>Natural stones and hand-strung beads for everyday magic.</p></div>
-    <div class="info-card"><div class="info-icon" aria-hidden="true">🦪</div><h3>Pearl & Celestial</h3><p>Moon charms, pearls, and stardust vibes for dreamers.</p></div>
-    <div class="info-card"><div class="info-icon" aria-hidden="true">🎨</div><h3>Custom Engraved</h3><p>Your name, your letters — preview live in our studio.</p></div>
+    <a class="info-card" href="products.html?cat=beaded"><div class="info-icon" aria-hidden="true">📿</div><h3>Beaded & Gemstone</h3><p>Natural stones and hand-strung beads for everyday magic.</p></a>
+    <a class="info-card" href="products.html?cat=pearl"><div class="info-icon" aria-hidden="true">🦪</div><h3>Pearl & Celestial</h3><p>Moon charms, pearls, and stardust vibes for dreamers.</p></a>
+    <a class="info-card" href="products.html?cat=custom"><div class="info-icon" aria-hidden="true">🎨</div><h3>Custom Engraved</h3><p>Your name, your letters — preview live in our studio.</p></a>
   </div>
 </section>
 
@@ -111,10 +111,10 @@
     <p class="section-desc">Professional features with a whimsical heart — accessible, friendly, and card-free.</p>
   </div>
   <div class="services-list">
-    <div class="service-item"><span class="service-num" aria-hidden="true">01</span><div><h3>Custom Design Studio</h3><p>Style, color, pattern & letters with a live preview.</p></div></div>
-    <div class="service-item"><span class="service-num" aria-hidden="true">02</span><div><h3>Product Zoom & Details</h3><p>Click any product to zoom in and read full manufacturing info.</p></div></div>
-    <div class="service-item"><span class="service-num" aria-hidden="true">03</span><div><h3>Byte AI Assistant</h3><p>Ask our chatbot about shipping, sizes, or accessibility.</p></div></div>
-    <div class="service-item"><span class="service-num" aria-hidden="true">04</span><div><h3>Name-Only Checkout</h3><p>No card details — ever. Just your name and you're done.</p></div></div>
+    <a class="service-item" href="customize.html"><span class="service-num" aria-hidden="true">01</span><div><h3>Custom Design Studio</h3><p>Style, color, pattern & letters with a live preview.</p></div></a>
+    <a class="service-item" href="products.html"><span class="service-num" aria-hidden="true">02</span><div><h3>Product Zoom & Details</h3><p>Click any product to zoom in and read full manufacturing info.</p></div></a>
+    <button type="button" class="service-item" id="openChatService"><span class="service-num" aria-hidden="true">03</span><div><h3>Byte AI Assistant</h3><p>Ask our chatbot about shipping, sizes, or accessibility.</p></div></button>
+    <a class="service-item" href="cart.html"><span class="service-num" aria-hidden="true">04</span><div><h3>Name-Only Checkout</h3><p>No card details — ever. Just your name and you're done.</p></div></a>
   </div>
 </section>
 
@@ -144,6 +144,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="js/shared-ui.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
