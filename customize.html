@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Design your custom bracelet — pick style, color, pattern, and engraving letters."/>
+  <title>Customize — BraceletByte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body data-page="customize">
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header role="banner">
+  <div class="header-top">
+    <a class="logo" href="index.html" aria-label="BraceletByte home">
+      <svg class="logo-icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="21" fill="#FFF8FC" stroke="#FFE0EE" stroke-width="1.5"/><circle cx="22" cy="22" r="13" stroke="#E878A0" stroke-width="3" fill="none"/><circle cx="22" cy="9" r="3" fill="#F5D061"/><circle cx="35" cy="22" r="2.5" fill="#D4BBFF"/><circle cx="22" cy="35" r="3" fill="#FFB5C2"/></svg>
+      <div class="logo-text"><span class="logo-name">BraceletByte</span><span class="logo-sub">Sparkle & Wrist Magic</span></div>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-link" href="index.html" data-page="home">Home</a>
+      <a class="nav-link" href="products.html" data-page="products">Products</a>
+      <a class="nav-link active" href="customize.html" data-page="customize">Customize</a>
+      <a class="nav-link" href="cart.html" data-page="cart">Cart</a>
+    </nav>
+    <div class="header-actions">
+      <a class="cart-link" href="cart.html" aria-label="View shopping cart">🛒 Cart <span class="badge" data-cart-count style="display:none">0</span></a>
+    </div>
+  </div>
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a class="nav-link" href="index.html" data-page="home">Home</a>
+    <a class="nav-link" href="products.html" data-page="products">Products</a>
+    <a class="nav-link active" href="customize.html" data-page="customize">Customize</a>
+    <a class="nav-link" href="cart.html" data-page="cart">Cart</a>
+  </nav>
+</header>
+
+<main id="main-content">
+<div class="page-hero">
+  <h1>Design Your Bracelet 🎨</h1>
+  <p>Pick style, color, pattern & letters — watch your creation sparkle live!</p>
+</div>
+
+<div class="customize-layout">
+  <div class="preview-panel" aria-live="polite" aria-label="Bracelet preview">
+    <p class="preview-label">Live Preview</p>
+    <div class="bracelet-preview">
+      <div class="preview-beads" id="previewBeads"></div>
+      <div class="preview-pattern" id="previewPattern"></div>
+      <div class="preview-ring" id="previewRing"></div>
+      <div class="preview-engraving" id="previewEngraving"></div>
+    </div>
+  </div>
+
+  <div class="options-panel">
+    <div class="option-group">
+      <label id="style-label">Style</label>
+      <div class="style-options" id="styleOptions" role="group" aria-labelledby="style-label">
+        <button type="button" class="option-btn selected" data-value="beaded">Beaded</button>
+        <button type="button" class="option-btn" data-value="chain">Chain</button>
+        <button type="button" class="option-btn" data-value="cuff">Cuff</button>
+        <button type="button" class="option-btn" data-value="leather">Leather Wrap</button>
+      </div>
+    </div>
+    <div class="option-group">
+      <label id="color-label">Color</label>
+      <div class="color-options" id="colorOptions" role="group" aria-labelledby="color-label">
+        <button type="button" class="color-swatch selected" data-color="#F5D061" style="background:#F5D061" aria-label="Gold"></button>
+        <button type="button" class="color-swatch" data-color="#FFB5C2" style="background:#FFB5C2" aria-label="Rose"></button>
+        <button type="button" class="color-swatch" data-color="#D4BBFF" style="background:#D4BBFF" aria-label="Lavender"></button>
+        <button type="button" class="color-swatch" data-color="#B8F0D8" style="background:#B8F0D8" aria-label="Mint"></button>
+        <button type="button" class="color-swatch" data-color="#B8C4D0" style="background:#B8C4D0" aria-label="Silver"></button>
+        <button type="button" class="color-swatch" data-color="#2B2420" style="background:#2B2420" aria-label="Midnight"></button>
+      </div>
+    </div>
+    <div class="option-group">
+      <label id="pattern-label">Pattern</label>
+      <div class="pattern-options" id="patternOptions" role="group" aria-labelledby="pattern-label">
+        <button type="button" class="option-btn selected" data-value="solid">Solid</button>
+        <button type="button" class="option-btn" data-value="stripes">Stripes</button>
+        <button type="button" class="option-btn" data-value="dots">Dots</button>
+        <button type="button" class="option-btn" data-value="hearts">Hearts</button>
+        <button type="button" class="option-btn" data-value="wave">Wave</button>
+      </div>
+    </div>
+    <div class="option-group">
+      <label for="engravingInput">Letters / Engraving</label>
+      <input type="text" class="engraving-input" id="engravingInput" placeholder="Enter name or initials (max 12)" maxlength="12" aria-describedby="engrave-hint"/>
+      <p class="engraving-hint" id="engrave-hint">+$3 per letter · shown on your preview</p>
+    </div>
+    <div class="customize-price"><span>Your price</span><span id="customPrice">$45</span></div>
+    <button type="button" class="checkout-btn" id="addCustomBtn">Add to Cart ✨</button>
+  </div>
+</div>
+</main>
+
+<footer role="contentinfo">
+  <span class="footer-logo">BraceletByte ✨</span>
+  <div class="footer-links"><a href="index.html">Home</a><a href="products.html">Products</a><a href="customize.html">Customize</a><a href="cart.html">Cart</a></div>
+  <span>© 2026 BraceletByte</span>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="js/shared-ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
