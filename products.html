@@ -43,15 +43,16 @@
 </div>
 
 <div class="products-layout">
-  <aside class="products-sidebar">
-    <div class="categories-bar">
-      <div class="categories-scroll" role="toolbar" aria-label="Filter by category"></div>
-    </div>
-  </aside>
   <section class="products-main">
-    <div class="search-wrap">
-      <label for="searchInput" class="visually-hidden">Search products</label>
-      <input type="search" class="engraving-input" placeholder="Search bracelets, materials, styles…" id="searchInput"/>
+    <div class="products-toolbar" aria-label="Product filters">
+      <div class="filter-control">
+        <label for="categorySelect">Product type</label>
+        <select id="categorySelect" class="category-select" aria-label="Choose a product category"></select>
+      </div>
+      <div class="search-wrap">
+        <label for="searchInput" class="visually-hidden">Search products</label>
+        <input type="search" class="engraving-input" placeholder="Search bracelets, materials, styles…" id="searchInput"/>
+      </div>
     </div>
     <div class="product-grid" id="productGrid" role="list" aria-label="Product list"></div>
   </section>
