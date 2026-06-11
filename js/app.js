@@ -358,6 +358,59 @@ function initHomeFeatured() {
   }
 }
 
+function initTabbedSlider() {
+  const slider = document.querySelector('.tabbed-slider');
+  if (!slider) return;
+
+  const nav = slider.querySelector('.tabbed-slider-nav');
+  const tabs = Array.from(nav.querySelectorAll('.tabbed-slider-tab'));
+  const indicator = nav.querySelector('.tabbed-slider-indicator');
+  const panels = Array.from(slider.querySelectorAll('.tabbed-slider-panel'));
+
+  const setIndicator = (tab) => {
+    if (!tab || !indicator) return;
+    const tabRect = tab.getBoundingClientRect();
+    const navRect = nav.getBoundingClientRect();
+    indicator.style.width = `${tabRect.width}px`;
+    indicator.style.left = `${tabRect.left - navRect.left}px`;
+  };
+
+  const switchPanel = (targetId, activeTab) => {
+    const current = slider.querySelector('.tabbed-slider-panel.active');
+    const next = slider.querySelector(`.tabbed-slider-panel[data-panel="${targetId}"]`);
+    if (!next || current === next) return;
+
+    current.classList.add('exiting');
+    current.classList.remove('entering');
+    current.classList.remove('active');
+
+    next.classList.add('active');
+    next.classList.add('entering');
+    next.scrollLeft = 0;
+
+    setIndicator(activeTab);
+
+    window.setTimeout(() => {
+      current.classList.remove('exiting');
+      next.classList.remove('entering');
+    }, 360);
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.classList.contains('active')) return;
+      tabs.forEach(item => {
+        item.classList.toggle('active', item === tab);
+        item.setAttribute('aria-selected', String(item === tab));
+      });
+      switchPanel(tab.dataset.target, tab);
+    });
+  });
+
+  window.addEventListener('resize', () => setIndicator(slider.querySelector('.tabbed-slider-tab.active')));
+  setIndicator(slider.querySelector('.tabbed-slider-tab.active'));
+}
+
 function initCustomizePage() {
   const state = { style: 'beaded', color: '#F5D061', pattern: 'solid', letters: '' };
   const previewRing = document.getElementById('previewRing');
@@ -545,7 +598,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const page = document.body.dataset.page;
   if (page) setActiveNav(page);
-  if (page === 'home') initHomeFeatured();
+  if (page === 'home') {
+    initHomeFeatured();
+    initTabbedSlider();
+  }
   if (page === 'products') initProductsPage();
   if (page === 'customize') initCustomizePage();
   if (page === 'cart') initCartPage();
