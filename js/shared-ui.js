@@ -68,9 +68,14 @@ function injectSharedUI() {
             <p id="productModalMaterial" class="product-modal-material"></p>
             <p id="productModalPrice" class="product-modal-price"></p>
             <p id="productModalDesc" class="product-modal-desc"></p>
+            <div id="productModalRating" class="product-modal-rating"></div>
             <div class="mfg-section">
               <h3>🏭 Manufacturing & Craft</h3>
               <ul id="productModalMfg" class="mfg-list"></ul>
+            </div>
+            <div class="reviews-section">
+              <h3>⭐ Customer reviews</h3>
+              <div id="productModalReviews" class="product-modal-reviews"></div>
             </div>
             <div class="product-modal-actions">
               <button type="button" class="btn-primary" id="productModalAdd">Add to Cart</button>

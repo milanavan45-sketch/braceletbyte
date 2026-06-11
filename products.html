@@ -23,7 +23,6 @@
       <a class="nav-link active" href="products.html" data-page="products">Products</a>
       <a class="nav-link" href="customize.html" data-page="customize">Customize</a>
       <a class="nav-link" href="cart.html" data-page="cart">Cart</a>
-      <a class="nav-link" href="products-slider.html">Featured Slider ✨</a>
     </nav>
     <div class="header-actions">
       <a class="cart-link" href="cart.html" aria-label="View shopping cart">🛒 Cart <span class="badge" data-cart-count style="display:none">0</span></a>
@@ -43,16 +42,20 @@
   <p>14 handcrafted styles · Click any product to zoom & see manufacturing details</p>
 </div>
 
-<div class="categories-bar">
-  <div class="categories-scroll" role="toolbar" aria-label="Filter by category"></div>
+<div class="products-layout">
+  <aside class="products-sidebar">
+    <div class="categories-bar">
+      <div class="categories-scroll" role="toolbar" aria-label="Filter by category"></div>
+    </div>
+  </aside>
+  <section class="products-main">
+    <div class="search-wrap">
+      <label for="searchInput" class="visually-hidden">Search products</label>
+      <input type="search" class="engraving-input" placeholder="Search bracelets, materials, styles…" id="searchInput"/>
+    </div>
+    <div class="product-grid" id="productGrid" role="list" aria-label="Product list"></div>
+  </section>
 </div>
-
-<div class="search-wrap">
-  <label for="searchInput" class="visually-hidden">Search products</label>
-  <input type="search" class="engraving-input" placeholder="Search bracelets, materials, styles…" id="searchInput"/>
-</div>
-
-<div class="product-grid" id="productGrid" role="list" aria-label="Product list"></div>
 </main>
 
 <footer role="contentinfo">

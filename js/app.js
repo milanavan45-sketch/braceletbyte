@@ -20,57 +20,81 @@ const CATEGORIES = [
 ];
 
 const PRODUCTS = [
-  { id: 'soleil-gold', name: 'Soleil Gold Cuff', material: '18k Gold Plated · Adjustable', price: 48, emoji: '📿', bg: 'linear-gradient(135deg,#FFF5E0,#F5D89A)', cat: 'gold', badge: 'new',
+  { id: 'soleil-gold', name: 'Soleil Gold Cuff', material: '18k Gold Plated · Adjustable', price: 48, emoji: '📿', image: 'soleil gold cuff.jpg', bg: 'linear-gradient(135deg,#FFF5E0,#F5D89A)', cat: 'gold', badge: 'new', rating: 4.9,
     desc: 'A sun-kissed cuff that catches every ray. Adjustable fit, hypoallergenic plating.',
+    reviews: [
+      { name: 'Mia', rating: 5, text: 'Beautiful fit and gorgeous finish — everyone asks where it is from.' },
+      { name: 'Zoe', rating: 5, text: 'Stays shiny and feels very luxe on.' }
+    ],
     mfg: { origin: 'Handcrafted in Portland, OR', materials: ['Recycled brass base', '18k gold plate', 'Hypoallergenic lacquer'], steps: ['Cast & shaped', 'Triple-plated', 'Hand-polished', 'QC inspected'], lead: '3–5 days', eco: '♻️ Recycled metals' }},
-  { id: 'amethyst-stack', name: 'Amethyst Dream Stack', material: 'Natural Amethyst · Set of 3', price: 62, emoji: '🔮', bg: 'linear-gradient(135deg,#F0E8FF,#D4C5E8)', cat: 'beaded', badge: 'hot',
+  { id: 'amethyst-stack', name: 'Amethyst Dream Stack', material: 'Natural Amethyst · Set of 3', price: 62, emoji: '🔮', image: 'amethyst dream stack.webp', bg: 'linear-gradient(135deg,#F0E8FF,#D4C5E8)', cat: 'beaded', badge: 'hot', rating: 4.8,
     desc: 'Three dreamy amethyst strands for calm, clarity, and major stack goals.',
+    reviews: [
+      { name: 'Ivy', rating: 5, text: 'The stones are gorgeous and my wrist feels so calming.' },
+      { name: 'Nova', rating: 4, text: 'Styled well with my other bracelets and feels high quality.' }
+    ],
     mfg: { origin: 'Strung in Asheville, NC', materials: ['Natural amethyst', 'Silk thread', 'Sterling spacers'], steps: ['Stone selection', 'Hand-knotted', 'Blessed & packaged'], lead: '2–4 days', eco: '🌿 Ethically sourced stones' }},
-  { id: 'wave-chain', name: 'Wave Sterling Chain', material: '925 Sterling Silver · 7"', price: 35, oldPrice: 50, emoji: '🌊', bg: 'linear-gradient(135deg,#EEF2F7,#CFD8E8)', cat: 'silver',
+  { id: 'wave-chain', name: 'Wave Sterling Chain', material: '925 Sterling Silver · 7"', price: 35, oldPrice: 50, emoji: '🌊', image: 'wave sterling chain.webp', bg: 'linear-gradient(135deg,#EEF2F7,#CFD8E8)', cat: 'silver', rating: 4.7,
     desc: 'Minimal wave-link chain — ocean vibes for everyday elegance.',
+    reviews: [
+      { name: 'Eden', rating: 5, text: 'Lovely chain with a soft wave detail that feels elegant.' },
+      { name: 'Rae', rating: 4, text: 'Perfect for stacking with my other silver pieces.' }
+    ],
     mfg: { origin: 'Made in Rhode Island', materials: ['925 sterling silver', 'Anti-tarnish coat'], steps: ['Link forging', 'Soldered', 'Tumbled smooth'], lead: '3–5 days', eco: '♻️ Recycled silver' }},
-  { id: 'cherry-charm', name: 'Cherry Blossom Charm', material: 'Rose Gold · Enamel Charms', price: 29, oldPrice: 42, emoji: '🌸', bg: 'linear-gradient(135deg,#FFE8EE,#F5B8C8)', cat: 'charm', badge: 'sale',
+  { id: 'cherry-charm', name: 'Cherry Blossom Charm', material: 'Rose Gold · Enamel Charms', price: 29, oldPrice: 42, emoji: '🌸', image: 'cherry blossom charm.jpg', bg: 'linear-gradient(135deg,#FFE8EE,#F5B8C8)', cat: 'charm', badge: 'sale',
     desc: 'Delicate cherry blossom charms on a rose gold chain — spring forever.',
     mfg: { origin: 'Designed in Tokyo, crafted in LA', materials: ['Rose gold plate', 'Hand-painted enamel'], steps: ['Charm casting', 'Enamel by hand', 'Assembly'], lead: '4–6 days', eco: '💧 Water-based enamel' }},
-  { id: 'cognac-leather', name: 'Cognac Leather Wrap', material: 'Full-Grain Leather · Unisex', price: 44, emoji: '🤎', bg: 'linear-gradient(135deg,#EDE0D4,#D4B99A)', cat: 'leather',
+  { id: 'cognac-leather', name: 'Cognac Leather Wrap', material: 'Full-Grain Leather · Unisex', price: 44, emoji: '🤎', image: 'cognac leather wrap (1).webp', bg: 'linear-gradient(135deg,#EDE0D4,#D4B99A)', cat: 'leather',
     desc: 'Rich cognac leather that ages beautifully. Wraps twice, magnetic clasp.',
     mfg: { origin: 'Tanned in Italy, assembled in NYC', materials: ['Vegetable-tanned leather', 'Brass magnetic clasp'], steps: ['Cut & burnish', 'Edge dyed', 'Clasp set'], lead: '5–7 days', eco: '🌿 Veg-tan, no chrome' }},
-  { id: 'jade-bangle', name: 'Jade Harmony Bangle', material: 'Natural Jade · Silver Trim', price: 78, emoji: '💚', bg: 'linear-gradient(135deg,#E8F5F0,#A8D8C8)', cat: 'crystal', badge: 'new',
+  { id: 'jade-bangle', name: 'Jade Harmony Bangle', material: 'Natural Jade · Silver Trim', price: 78, emoji: '💚', image: 'Jade harmony bangle (1).jpg', bg: 'linear-gradient(135deg,#E8F5F0,#A8D8C8)', cat: 'crystal', badge: 'new',
     desc: 'Serene jade bangle with sterling trim — balance and beauty united.',
     mfg: { origin: 'Jade from Myanmar, set in Seattle', materials: ['Grade A jade', '925 silver trim'], steps: ['Jade carving', 'Silver inlay', 'Final polish'], lead: '7–10 days', eco: '✅ Fair-trade sourced' }},
-  { id: 'golden-stack', name: 'Golden Hours Stack', material: 'Gold-Fill · Set of 5', price: 95, oldPrice: 120, emoji: '✨', bg: 'linear-gradient(135deg,#FFF8E0,#FFE87A)', cat: 'stackable',
+  { id: 'golden-stack', name: 'Golden Hours Stack', material: 'Gold-Fill · Set of 5', price: 95, oldPrice: 120, emoji: '✨', image: 'Golden hour stack.jpg', bg: 'linear-gradient(135deg,#FFF8E0,#FFE87A)', cat: 'stackable',
     desc: 'Five golden bands for golden hour glow. Mix, match, never take off.',
     mfg: { origin: 'Handmade in Austin, TX', materials: ['14k gold-fill wire', 'Lobster clasp'], steps: ['Wire wrapping', 'Hammered texture', 'Set of 5 boxed'], lead: '3–5 days', eco: '♻️ Gold-fill = less mining' }},
-  { id: 'name-plate', name: 'Name Plate Bracelet', material: 'Custom Engraved · Silver/Gold', price: 55, emoji: '🎨', bg: 'linear-gradient(135deg,#F0EEFF,#C8BCFF)', cat: 'custom', badge: 'hot',
+  { id: 'name-plate', name: 'Name Plate Bracelet', material: 'Custom Engraved · Silver/Gold', price: 55, emoji: '🎨', image: 'name plate bracelet (1).jpg', bg: 'linear-gradient(135deg,#F0EEFF,#C8BCFF)', cat: 'custom', badge: 'hot',
     desc: 'Your name, your story. Laser-engraved on a dainty plate bracelet.',
     mfg: { origin: 'Engraved on-demand in Chicago', materials: ['Sterling or gold plate', 'Laser engraving'], steps: ['Plate cut', 'Laser engraved', 'Chain attached'], lead: '5–8 days', eco: '♻️ Zero-waste engraving' }},
-  { id: 'pearl-classic', name: 'Luna Pearl Strand', material: 'Freshwater Pearl · 14k Clasp', price: 68, emoji: '🦪', bg: 'linear-gradient(135deg,#FFF8FC,#F5E0EE)', cat: 'pearl', badge: 'new',
+  { id: 'pearl-classic', name: 'Luna Pearl Strand', material: 'Freshwater Pearl · 14k Clasp', price: 68, emoji: '🦪', image: 'Luna pearl strand.jpg', bg: 'linear-gradient(135deg,#FFF8FC,#F5E0EE)', cat: 'pearl', badge: 'new',
     desc: 'Lustrous freshwater pearls on a dainty 14k clasp — timeless grace.',
     mfg: { origin: 'Pearls from Japan, strung in Boston', materials: ['AAA freshwater pearls', '14k gold clasp'], steps: ['Pearl grading', 'Silk restringing', 'Clasp set'], lead: '4–6 days', eco: '🌊 Sustainable farms' }},
-  { id: 'friendship-braid', name: 'Bestie Braid Duo', material: 'Woven Cotton · Set of 2', price: 22, emoji: '💕', bg: 'linear-gradient(135deg,#FFE0F0,#FFB8D9)', cat: 'friendship',
+  { id: 'friendship-braid', name: 'Bestie Braid Duo', material: 'Woven Cotton · Set of 2', price: 22, emoji: '💕', image: 'Bestie braided duo.jpg', bg: 'linear-gradient(135deg,#FFE0F0,#FFB8D9)', cat: 'friendship',
     desc: 'Matching friendship bracelets for you and your ride-or-die. Two in every pack!',
     mfg: { origin: 'Woven by artisans in Oaxaca', materials: ['Organic cotton thread', 'Adjustable tie'], steps: ['Hand-braided', 'Color-matched pair', 'Gift tagged'], lead: '2–3 days', eco: '🌿 Organic cotton' }},
-  { id: 'moon-celestial', name: 'Moonphase Celestial', material: 'Silver · Moon Charms', price: 52, emoji: '🌙', bg: 'linear-gradient(135deg,#E8E4F8,#B8B0E8)', cat: 'celestial', badge: 'hot',
+  { id: 'moon-celestial', name: 'Moonphase Celestial', material: 'Silver · Moon Charms', price: 52, emoji: '🌙', image: 'moonphase celestial (1).jpg', bg: 'linear-gradient(135deg,#E8E4F8,#B8B0E8)', cat: 'celestial', badge: 'hot',
     desc: 'Phases of the moon on a sterling chain — for stargazers and dreamers.',
     mfg: { origin: 'Cast in New Mexico', materials: ['925 silver', 'Oxidized moon charms'], steps: ['Lost-wax casting', 'Oxidation', 'Chain assembly'], lead: '5–7 days', eco: '♻️ Recycled silver' }},
-  { id: 'vintage-locket', name: 'Vintage Locket Chain', material: 'Antique Gold · Photo Locket', price: 58, emoji: '🕰️', bg: 'linear-gradient(135deg,#F5EDE0,#E8D4B0)', cat: 'vintage',
+  { id: 'vintage-locket', name: 'Vintage Locket Chain', material: 'Antique Gold · Photo Locket', price: 58, emoji: '🕰️', image: 'vintage locket chain (1).jpg', bg: 'linear-gradient(135deg,#F5EDE0,#E8D4B0)', cat: 'vintage',
     desc: 'A tiny locket for tiny treasures. Vintage-inspired, modern quality.',
     mfg: { origin: 'Inspired by 1920s Paris, made in Montreal', materials: ['Antique gold plate', 'Hinged locket'], steps: ['Locket hinge set', 'Chain matched', 'Velvet pouch'], lead: '6–8 days', eco: '♻️ Upcycled chain links' }},
-  { id: 'eco-cork', name: 'Eco Cork Band', material: 'Cork & Hemp · Vegan', price: 32, emoji: '🌿', bg: 'linear-gradient(135deg,#E8F5E8,#B8DEB8)', cat: 'eco', badge: 'new',
+  { id: 'eco-cork', name: 'Eco Cork Band', material: 'Cork & Hemp · Vegan', price: 32, emoji: '🌿', image: 'Eco cork.jpg', bg: 'linear-gradient(135deg,#E8F5E8,#B8DEB8)', cat: 'eco', badge: 'new', rating: 4.6,
     desc: 'Lightweight cork and hemp — planet-friendly and super comfy.',
-    mfg: { origin: 'Cork from Portugal, assembled in Berlin', materials: ['Natural cork', 'Hemp cord', 'Wood bead'], steps: ['Cork sliced', 'Hemp braided', 'Bead knotted'], lead: '3–4 days', eco: '🌍 100% vegan & biodegradable' }},
-  { id: 'stitched-yarn', name: 'Stitched Yarn Wrap', material: 'Organic Yarn · Soft Tie', price: 26, emoji: '🧶', bg: 'linear-gradient(135deg,#FFF0E9,#FFC2B5)', cat: 'yarn',
+    mfg: { origin: 'Cork from Portugal, assembled in Berlin', materials: ['Natural cork', 'Hemp cord', 'Wood bead'], steps: ['Cork sliced', 'Hemp braided', 'Bead knotted'], lead: '3–4 days', eco: '🌍 100% vegan & biodegradable' },
+    reviews: [
+      { name: 'Ava', rating: 5, text: 'So comfortable and sustainable — love the natural texture.' },
+      { name: 'Cass', rating: 4, text: 'Great everyday bracelet, especially for summer.' }
+    ]},
+  { id: 'stitched-yarn', name: 'Stitched Yarn Wrap', material: 'Organic Yarn · Soft Tie', price: 26, emoji: '🧶', image: 'yarn ball.jpg', bg: 'linear-gradient(135deg,#FFF0E9,#FFC2B5)', cat: 'yarn',
     desc: 'Soft organic yarn wraps for gentle, playful texture and bright color.',
     mfg: { origin: 'Crafted in Portland, OR', materials: ['Organic cotton yarn', 'Embroidery thread'], steps: ['Hand-stitch', 'Patterned wrap', 'Tied with care'], lead: '2–3 days', eco: '🌿 Vegan yarn and low-waste dye' }},
-  { id: 'sunset-necklace', name: 'Sunset Pendant Necklace', material: 'Gold Fill · Shell Charm', price: 54, emoji: '🌅', bg: 'linear-gradient(135deg,#FFF0CE,#FFD4A6)', cat: 'necklace', badge: 'hot',
+  { id: 'sunset-necklace', name: 'Sunset Pendant Necklace', material: 'Gold Fill · Shell Charm', price: 54, emoji: '🌅', image: 'Sunset pendant necklace.webp', bg: 'linear-gradient(135deg,#FFF0CE,#FFD4A6)', cat: 'necklace', badge: 'hot',
     desc: 'A warm pendant necklace with beachy shell charm and subtle shine.',
     mfg: { origin: 'Designed in Miami, made in LA', materials: ['Gold fill', 'Shell charm', 'Adjustable chain'], steps: ['Chain finished', 'Charm attached', 'Polished'], lead: '3–5 days', eco: '♻️ Gold fill with minimal mining' }},
-  { id: 'opal-drop-ears', name: 'Opal Drop Earrings', material: 'Sterling Silver · Opal', price: 42, emoji: '💎', bg: 'linear-gradient(135deg,#E8F2FF,#C7D8FF)', cat: 'earring',
+  { id: 'opal-drop-ears', name: 'Opal Drop Earrings', material: 'Sterling Silver · Opal', price: 42, emoji: '💎', image: 'opal drop earrings (1).avif', bg: 'linear-gradient(135deg,#E8F2FF,#C7D8FF)', cat: 'earring', rating: 4.8,
     desc: 'Playful opal drops that match your bracelet stack or necklace sets.',
-    mfg: { origin: 'Made in Seattle', materials: ['925 sterling silver', 'Lab opal'], steps: ['Stone set', 'Earring formed', 'Polished'], lead: '4–6 days', eco: '🌱 Recycled metals' }},
-  { id: 'minimal-bar', name: 'Whisper Thin Bar', material: 'Sterling Silver · 1mm', price: 38, emoji: '◽', bg: 'linear-gradient(135deg,#F5F5F5,#E0E0E0)', cat: 'minimalist',
+    mfg: { origin: 'Made in Seattle', materials: ['925 sterling silver', 'Lab opal'], steps: ['Stone set', 'Earring formed', 'Polished'], lead: '4–6 days', eco: '🌱 Recycled metals' },
+    reviews: [
+      { name: 'Lina', rating: 5, text: 'The opal sparkle is even better in person.' },
+      { name: 'Tess', rating: 4, text: 'Really pretty earrings with a soft glow.' }
+    ]},
+  { id: 'minimal-bar', name: 'Whisper Thin Bar', material: 'Sterling Silver · 1mm', price: 38, emoji: '◽', image: 'whisper thin bar.webp', bg: 'linear-gradient(135deg,#F5F5F5,#E0E0E0)', cat: 'minimalist', rating: 4.7,
     desc: 'Ultra-thin bar bracelet — barely there, always noticed.',
-    mfg: { origin: 'Minimalist studio in Copenhagen-style workshop, NYC', materials: ['925 sterling', '1mm profile'], steps: ['Bar drawn', 'Ends rounded', 'Mirror polish'], lead: '2–4 days', eco: '♻️ Recycled sterling' }}
+    mfg: { origin: 'Minimalist studio in Copenhagen-style workshop, NYC', materials: ['925 sterling', '1mm profile'], steps: ['Bar drawn', 'Ends rounded', 'Mirror polish'], lead: '2–4 days', eco: '♻️ Recycled sterling' },
+    reviews: [
+      { name: 'Noa', rating: 5, text: 'Perfect subtle finish — I wear it every day.' },
+      { name: 'June', rating: 4, text: 'Love the thin design, goes with everything.' }
+    ]}
 ];
 
 const CUSTOMIZE = {
@@ -153,23 +177,33 @@ function setActiveNav(page) {
   });
 }
 
+function getStarMarkup(rating) {
+  const stars = Math.round(Math.min(Math.max(rating || 0, 0), 5));
+  const filled = '★'.repeat(stars);
+  const empty = '☆'.repeat(5 - stars);
+  return `<span class="stars" aria-hidden="true">${filled}${empty}</span>`;
+}
+
 function renderProductCard(product) {
   const badgeHtml = product.badge
     ? `<span class="product-badge badge-${product.badge}">${product.badge === 'hot' ? 'Hot' : product.badge.charAt(0).toUpperCase() + product.badge.slice(1)}</span>`
     : '';
   const oldPriceHtml = product.oldPrice ? `<span class="price-old">$${product.oldPrice}</span>` : '';
   const wished = getWishlist().includes(product.id);
+  const ratingValue = product.rating ?? 4.8;
+  const reviewCount = product.reviews?.length || 0;
 
   return `
     <article class="product-card" data-cat="${product.cat}" data-name="${product.name.toLowerCase()}" data-id="${product.id}" tabindex="0" role="button" aria-label="View details for ${product.name}, $${product.price}">
-      <div class="product-img" style="background:${product.bg}">
-        <span aria-hidden="true">${product.emoji}</span>
+      <div class="product-img" style="${product.image ? '' : `background:${product.bg}`}">
+        ${product.image ? `<img src="${encodeURI(product.image)}" alt="${product.name}">` : `<span aria-hidden="true">${product.emoji}</span>`}
         ${badgeHtml}
         <button class="wishlist-btn ${wished ? 'wished' : ''}" data-wish-id="${product.id}" aria-label="${wished ? 'Remove from' : 'Add to'} wishlist" aria-pressed="${wished}">${wished ? '♥' : '♡'}</button>
       </div>
       <div class="product-info">
         <div class="product-name">${product.name}</div>
         <div class="product-material">${product.material}</div>
+        <div class="product-rating">${getStarMarkup(ratingValue)}<span class="rating-value">${ratingValue.toFixed(1)}</span>${reviewCount ? `<span class="review-count">(${reviewCount})</span>` : ''}</div>
         <div class="product-footer">
           <div><span class="product-price">$${product.price}</span>${oldPriceHtml}</div>
           <button class="add-btn" data-add-id="${product.id}" aria-label="Add ${product.name} to cart">+</button>
@@ -248,11 +282,31 @@ function openProductModal(id) {
     <li><strong>Sustainability:</strong> ${mfg.eco}</li>` : '';
 
   const zoomImg = document.getElementById('zoomImg');
-  zoomImg.style.background = p.bg;
-  zoomImg.innerHTML = `<span class="zoom-emoji" aria-hidden="true">${p.emoji}</span>`;
+  zoomImg.style.background = p.bg || 'var(--surface-alt)';
+  const imageSrc = p.image ? encodeURI(p.image) : '';
+  zoomImg.innerHTML = p.image
+    ? `<img src="${imageSrc}" alt="${p.name}" loading="lazy">`
+    : `<span class="zoom-emoji" aria-hidden="true">${p.emoji}</span>`;
   updateZoom();
 
   const wished = getWishlist().includes(p.id);
+  const reviewCount = p.reviews?.length || 0;
+  const ratingValue = p.rating ?? 4.8;
+  document.getElementById('productModalRating').innerHTML = `
+    <div class="product-review-rating" aria-label="Rated ${ratingValue.toFixed(1)} out of 5 stars">
+      ${getStarMarkup(ratingValue)}
+      <span class="rating-value">${ratingValue.toFixed(1)}</span>
+      <span class="review-count">(${reviewCount} reviews)</span>
+    </div>`;
+  document.getElementById('productModalReviews').innerHTML = p.reviews && p.reviews.length
+    ? p.reviews.map(r => `
+        <article class="review-card">
+          <div class="review-stars" aria-hidden="true">${getStarMarkup(Math.round(r.rating ?? ratingValue))}</div>
+          <div class="reviewer">${r.name}</div>
+          <p>${r.text}</p>
+        </article>`).join('')
+    : `<p class="no-reviews">No reviews yet. Be the first to love this bracelet!</p>`;
+
   const wishBtn = document.getElementById('productModalWish');
   wishBtn.textContent = wished ? '♥ Wishlisted' : '♡ Wishlist';
   wishBtn.setAttribute('aria-pressed', String(wished));
@@ -356,59 +410,6 @@ function initHomeFeatured() {
     grid.innerHTML = PRODUCTS.slice(0, 4).map(renderProductCard).join('');
     bindProductGrid(grid);
   }
-}
-
-function initTabbedSlider() {
-  const slider = document.querySelector('.tabbed-slider');
-  if (!slider) return;
-
-  const nav = slider.querySelector('.tabbed-slider-nav');
-  const tabs = Array.from(nav.querySelectorAll('.tabbed-slider-tab'));
-  const indicator = nav.querySelector('.tabbed-slider-indicator');
-  const panels = Array.from(slider.querySelectorAll('.tabbed-slider-panel'));
-
-  const setIndicator = (tab) => {
-    if (!tab || !indicator) return;
-    const tabRect = tab.getBoundingClientRect();
-    const navRect = nav.getBoundingClientRect();
-    indicator.style.width = `${tabRect.width}px`;
-    indicator.style.left = `${tabRect.left - navRect.left}px`;
-  };
-
-  const switchPanel = (targetId, activeTab) => {
-    const current = slider.querySelector('.tabbed-slider-panel.active');
-    const next = slider.querySelector(`.tabbed-slider-panel[data-panel="${targetId}"]`);
-    if (!next || current === next) return;
-
-    current.classList.add('exiting');
-    current.classList.remove('entering');
-    current.classList.remove('active');
-
-    next.classList.add('active');
-    next.classList.add('entering');
-    next.scrollLeft = 0;
-
-    setIndicator(activeTab);
-
-    window.setTimeout(() => {
-      current.classList.remove('exiting');
-      next.classList.remove('entering');
-    }, 360);
-  };
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      if (tab.classList.contains('active')) return;
-      tabs.forEach(item => {
-        item.classList.toggle('active', item === tab);
-        item.setAttribute('aria-selected', String(item === tab));
-      });
-      switchPanel(tab.dataset.target, tab);
-    });
-  });
-
-  window.addEventListener('resize', () => setIndicator(slider.querySelector('.tabbed-slider-tab.active')));
-  setIndicator(slider.querySelector('.tabbed-slider-tab.active'));
 }
 
 function initCustomizePage() {
@@ -598,10 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const page = document.body.dataset.page;
   if (page) setActiveNav(page);
-  if (page === 'home') {
-    initHomeFeatured();
-    initTabbedSlider();
-  }
+  if (page === 'home') initHomeFeatured();
   if (page === 'products') initProductsPage();
   if (page === 'customize') initCustomizePage();
   if (page === 'cart') initCartPage();
