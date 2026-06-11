@@ -27,24 +27,7 @@ function injectSharedUI() {
       <p class="splash-sub">✨ wrist magic loading ✨</p>
     </div>
 
-    <div id="signupModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="signupTitle" hidden>
-      <div class="modal-backdrop" data-close-modal="signupModal"></div>
-      <div class="modal-panel modal-whimsy">
-        <button class="modal-close" data-close-modal="signupModal" aria-label="Close sign up">×</button>
-        <div class="modal-icon" aria-hidden="true">🎀</div>
-        <h2 id="signupTitle">Welcome to BraceletByte!</h2>
-        <p class="modal-desc">Sign up so we know your name at checkout — no payment info needed, ever.</p>
-        <form id="signupForm">
-          <label for="signupName">Your name <span class="req">*</span></label>
-          <input type="text" id="signupName" class="field-input" required autocomplete="name" placeholder="e.g. Luna"/>
-          <label for="signupEmail">Email (optional, for cute updates)</label>
-          <input type="email" id="signupEmail" class="field-input" autocomplete="email" placeholder="you@example.com"/>
-          <button type="submit" class="btn-primary btn-block">Join the sparkle club ✨</button>
-          <button type="button" class="btn-ghost btn-block" data-close-modal="signupModal">Maybe later</button>
-        </form>
-      </div>
-    </div>
-
+    <!-- 移除原来的 signupModal，改用 Google 登录弹窗 -->
     <div id="checkoutModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle" hidden>
       <div class="modal-backdrop" data-close-modal="checkoutModal"></div>
       <div class="modal-panel modal-whimsy">
@@ -165,20 +148,6 @@ function augmentHeader() {
   themeBtn.setAttribute('aria-label', 'Toggle light and dark mode');
   themeBtn.innerHTML = '<span class="theme-icon" aria-hidden="true">🌙</span>';
 
-  const signUpBtn = document.createElement('button');
-  signUpBtn.type = 'button';
-  signUpBtn.id = 'signUpBtn';
-  signUpBtn.className = 'account-btn';
-  signUpBtn.setAttribute('aria-label', 'Sign up for BraceletByte');
-  signUpBtn.textContent = 'Sign Up';
-
-  const loginBtn = document.createElement('button');
-  loginBtn.type = 'button';
-  loginBtn.id = 'loginBtn';
-  loginBtn.className = 'account-btn';
-  loginBtn.setAttribute('aria-label', 'Log in to BraceletByte');
-  loginBtn.textContent = 'Log In';
-
   const accountBtn = document.createElement('button');
   accountBtn.type = 'button';
   accountBtn.id = 'authAccountBtn';
@@ -196,25 +165,13 @@ function augmentHeader() {
   actions.insertBefore(themeBtn, actions.firstChild);
   actions.insertBefore(sizeBtn, actions.firstChild);
   actions.insertBefore(accountBtn, actions.firstChild);
-  actions.insertBefore(loginBtn, actions.firstChild);
-  actions.insertBefore(signUpBtn, actions.firstChild);
 
   themeBtn.addEventListener('click', toggleTheme);
   sizeBtn.addEventListener('click', () => openModal('sizeGuideModal'));
-  signUpBtn.addEventListener('click', () => {
-    const user = getUser();
-    if (user) showUserMenu(); else openModal('signupModal');
-  });
-  loginBtn.addEventListener('click', () => {
-    const user = getUser();
-    if (user) showUserMenu(); else openModal('signupModal');
-  });
   accountBtn.addEventListener('click', () => {
-    const user = getUser();
-    if (user) showUserMenu(); else openModal('signupModal');
+    const user = window.auth?.getCurrentUser?.();
+    if (user) showUserMenu(); else if (window.showAuthModal) window.showAuthModal();
   });
-
-  updateAccountButton();
 }
 
 function initSparkles() {
@@ -235,21 +192,9 @@ function initModals() {
     el.addEventListener('click', () => closeModal(el.dataset.closeModal));
   });
 
-  document.getElementById('signupForm')?.addEventListener('submit', e => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value.trim();
-    const email = document.getElementById('signupEmail').value.trim();
-    if (!name) return;
-    saveUser({ name, email });
-    closeModal('signupModal');
-    announce(`Welcome, ${name}! You're signed up.`);
-    showVisualAlert(`Welcome, ${name}! 🎀`);
-    updateAccountButton();
-  });
-
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-      ['productModal', 'signupModal', 'checkoutModal', 'sizeGuideModal'].forEach(id => closeModal(id));
+      ['productModal', 'checkoutModal', 'sizeGuideModal'].forEach(id => closeModal(id));
       closeChat();
     }
   });
@@ -303,7 +248,8 @@ function runSplash() {
 
   if (reduced || seen) {
     splash.remove();
-    maybeShowSignup();
+    document.body.classList.remove('splash-active');
+    maybeShowAuth();
     return;
   }
 
@@ -312,17 +258,22 @@ function runSplash() {
 
   setTimeout(() => {
     splash.classList.add('splash-out');
+    splash.style.pointerEvents = 'none';
+
     setTimeout(() => {
+      if (!splash.isConnected) return;
       splash.remove();
       document.body.classList.remove('splash-active');
-      maybeShowSignup();
+      maybeShowAuth();
     }, 700);
   }, 2800);
 }
 
-function maybeShowSignup() {
-  if (!getUser()?.name) {
-    setTimeout(() => openModal('signupModal'), 400);
+// 动画结束后显示 Google 登录弹窗（而不是原来的 signupModal）
+function maybeShowAuth() {
+  const user = window.auth?.getCurrentUser?.();
+  if (!user && window.showAuthModal) {
+    setTimeout(() => window.showAuthModal(), 200);
   }
 }
 
@@ -407,7 +358,7 @@ function getChatReply(text) {
   if (/blind|screen reader|access/.test(q)) return 'We support screen readers, skip links, high contrast, large text & visual alerts (no sound needed). Use the A+ tools on the left!';
   if (/deaf|hear|sound/.test(q)) return 'All notifications are visual — toasts, banners & chat. No audio required! 💬';
   if (/pay|card|credit/.test(q)) return 'We never ask for card details! Checkout only needs your name. 🔒';
-  if (/sign|account|join/.test(q)) return 'Click Sign Up in the header after the welcome animation! Just your name — email optional.';
+  if (/sign|account|join/.test(q)) return 'Click the 👤 button in the header after the welcome animation! Just sign in with Google or continue as guest.';
   if (/hello|hi|hey/.test(q)) return 'Hello, sparkle friend! How can I help you find the perfect bracelet? ✨';
   return 'Try asking about shipping, customizing, categories, sizes, or accessibility! Or browse Products — every card opens full details with zoom. 💖';
 }
@@ -473,31 +424,20 @@ function getLoggedInUser() {
   return window.auth?.getCurrentUser?.() || getUser();
 }
 
-function updateAccountButton() {
-  const user = getLoggedInUser();
-  const signUpBtn = document.getElementById('signUpBtn');
-  const loginBtn = document.getElementById('loginBtn');
-  const accountBtn = document.getElementById('authAccountBtn');
-
-  if (signUpBtn) {
-    signUpBtn.textContent = user ? 'Profile' : 'Sign Up';
-    signUpBtn.setAttribute('aria-label', user ? 'View profile' : 'Sign up for BraceletByte');
-  }
-  if (loginBtn) {
-    loginBtn.textContent = user ? 'Account' : 'Log In';
-    loginBtn.setAttribute('aria-label', user ? 'View account menu' : 'Log in to BraceletByte');
-  }
-  if (accountBtn) {
+function updateAccountButtonDisplay() {
+  const user = window.auth?.getCurrentUser?.();
+  const btn = document.getElementById('authAccountBtn');
+  if (btn) {
     if (user && !user.isGuest) {
       const initial = (user.name?.[0] || user.email?.[0] || 'U').toUpperCase();
-      accountBtn.innerHTML = `<span style="font-weight:600;font-size:14px;">${initial}</span>`;
-      accountBtn.title = `Signed in as ${user.name || user.email}`;
+      btn.innerHTML = `<span style="font-weight:600;font-size:14px;">${initial}</span>`;
+      btn.title = user.name || user.email || 'Account';
     } else if (user?.isGuest) {
-      accountBtn.innerHTML = '🎮';
-      accountBtn.title = 'Guest Mode';
+      btn.innerHTML = '🎮';
+      btn.title = 'Guest Mode';
     } else {
-      accountBtn.innerHTML = '👤';
-      accountBtn.title = 'Sign In';
+      btn.innerHTML = '👤';
+      btn.title = 'Sign In';
     }
   }
 }
@@ -538,16 +478,14 @@ function showUserMenu() {
     setTimeout(() => document.addEventListener('click', closeMenu), 10);
     document.getElementById('userMenuSignOut')?.addEventListener('click', () => {
       window.auth?.signOut?.();
-      saveUser(null);
       menu.remove();
-      updateAccountButton();
     });
   }
 }
 
 // 监听用户变化
 window.addEventListener('userChanged', () => {
-  updateAccountButton();
+  updateAccountButtonDisplay();
   if (typeof updateCartBadge === 'function') updateCartBadge();
 });
 
