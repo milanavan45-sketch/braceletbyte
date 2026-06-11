@@ -191,8 +191,33 @@
     /* ── CATEGORIES BAR ── */
     .categories-bar {
       border-top: 1px solid var(--stone);
-      padding: 0 40px;
+      padding: 12px 40px;
       background: var(--warm-white);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .category-label {
+      color: var(--mid);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .category-select {
+      min-height: 42px;
+      width: min(260px, 100%);
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1.5px solid var(--stone);
+      background: var(--cream);
+      color: var(--deep);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .categories-scroll {
@@ -366,7 +391,7 @@
     /* ── PRODUCT GRID ── */
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
       gap: 20px;
     }
 
@@ -705,17 +730,18 @@
 
   <!-- Categories Bar -->
   <div class="categories-bar">
-    <div class="categories-scroll">
-      <button class="cat-chip active" onclick="filterCat(this, 'all')"><span class="cat-emoji">✨</span> All</button>
-      <button class="cat-chip" onclick="filterCat(this, 'beaded')"><span class="cat-emoji">📿</span> Beaded</button>
-      <button class="cat-chip" onclick="filterCat(this, 'gold')"><span class="cat-emoji">🏅</span> Gold</button>
-      <button class="cat-chip" onclick="filterCat(this, 'silver')"><span class="cat-emoji">🥈</span> Silver</button>
-      <button class="cat-chip" onclick="filterCat(this, 'charm')"><span class="cat-emoji">🌸</span> Charm</button>
-      <button class="cat-chip" onclick="filterCat(this, 'leather')"><span class="cat-emoji">🤎</span> Leather</button>
-      <button class="cat-chip" onclick="filterCat(this, 'crystal')"><span class="cat-emoji">💎</span> Crystal</button>
-      <button class="cat-chip" onclick="filterCat(this, 'stackable')"><span class="cat-emoji">🔗</span> Stackable</button>
-      <button class="cat-chip" onclick="filterCat(this, 'custom')"><span class="cat-emoji">🎨</span> Custom</button>
-    </div>
+    <label class="category-label" for="legacyCategorySelect">Product type</label>
+    <select id="legacyCategorySelect" class="category-select" onchange="filterCat(this.value)" aria-label="Choose a product category">
+      <option value="all">All</option>
+      <option value="beaded">Beaded</option>
+      <option value="gold">Gold</option>
+      <option value="silver">Silver</option>
+      <option value="charm">Charm</option>
+      <option value="leather">Leather</option>
+      <option value="crystal">Crystal</option>
+      <option value="stackable">Stackable</option>
+      <option value="custom">Custom</option>
+    </select>
   </div>
 </header>
 
@@ -974,23 +1000,25 @@
     showToast(isWished ? '💔 Removed from wishlist' : '❤️ Added to wishlist');
   }
 
-  function filterCat(btn, cat) {
-    // Update chip styles
-    document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    else {
-      // Find matching chip
-      document.querySelectorAll('.cat-chip').forEach(c => {
-        if (c.getAttribute('onclick')?.includes(`'${cat}'`)) c.classList.add('active');
-      });
-    }
-
-    // Filter products
+  function applyProductFilters() {
+    const cat = document.getElementById('legacyCategorySelect')?.value || 'all';
+    const q = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
     document.querySelectorAll('.product-card').forEach(card => {
-      const show = cat === 'all' || card.dataset.cat === cat;
+      const name = card.querySelector('.product-name')?.textContent.toLowerCase() || '';
+      const mat = card.querySelector('.product-material')?.textContent.toLowerCase() || '';
+      const searchableText = `${name} ${mat}`;
+      const matchesCategory = cat === 'all'
+        || card.dataset.cat === cat
+        || (cat === 'gold' && searchableText.includes('gold'))
+        || (cat === 'silver' && searchableText.includes('silver'))
+        || (cat === 'beaded' && (searchableText.includes('bead') || searchableText.includes('gemstone')));
+      const show = matchesCategory && (!q || name.includes(q) || mat.includes(q));
       card.style.display = show ? '' : 'none';
     });
+  }
 
+  function filterCat(cat) {
+    applyProductFilters();
     if (cat !== 'all') {
       showToast(`Showing ${cat} bracelets`);
       document.getElementById('products').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -998,12 +1026,7 @@
   }
 
   function handleSearch(val) {
-    const q = val.toLowerCase().trim();
-    document.querySelectorAll('.product-card').forEach(card => {
-      const name = card.querySelector('.product-name').textContent.toLowerCase();
-      const mat  = card.querySelector('.product-material').textContent.toLowerCase();
-      card.style.display = (!q || name.includes(q) || mat.includes(q)) ? '' : 'none';
-    });
+    applyProductFilters();
   }
 
   function copyCode() {
