@@ -357,7 +357,12 @@ function initProductModal() {
   });
 }
 
-function renderCategoryBar(container) {
+function renderCategoryBar(container, select) {
+  if (select) {
+    select.innerHTML = CATEGORIES.map(c =>
+      `<option value="${c.id}">${c.label}</option>`
+    ).join('');
+  }
   if (!container) return;
   container.innerHTML = CATEGORIES.map((c, i) =>
     `<button class="cat-chip${i === 0 ? ' active' : ''}" data-cat="${c.id}" aria-pressed="${i === 0}"><span class="cat-emoji" aria-hidden="true">${c.emoji}</span> ${c.label}</button>`
@@ -370,7 +375,15 @@ function renderCategoryBar(container) {
 function initProductsPage() {
   const grid = document.getElementById('productGrid');
   const catBar = document.querySelector('.categories-scroll');
-  renderCategoryBar(catBar);
+  const catSelect = document.getElementById('categorySelect');
+  renderCategoryBar(catBar, catSelect);
+  if (catSelect) {
+    catSelect.addEventListener('change', e => {
+      const value = e.target.value;
+      const chip = document.querySelector(`.cat-chip[data-cat="${value}"]`);
+      filterProducts(value, chip);
+    });
+  }
   if (grid) {
     grid.innerHTML = PRODUCTS.map(renderProductCard).join('');
     bindProductGrid(grid);
@@ -379,11 +392,13 @@ function initProductsPage() {
   const urlCat = new URLSearchParams(window.location.search).get('cat');
   if (urlCat) {
     const chip = document.querySelector(`.cat-chip[data-cat="${urlCat}"]`);
-    if (chip) filterProducts(urlCat, chip);
+    filterProducts(urlCat, chip);
   }
 }
 
 function filterProducts(cat, btn) {
+  const select = document.getElementById('categorySelect');
+  if (select) select.value = cat;
   document.querySelectorAll('.cat-chip').forEach(c => {
     const active = c === btn;
     c.classList.toggle('active', active);
