@@ -98,28 +98,15 @@ const PRODUCTS = [
 ];
 
 const CUSTOMIZE = {
-  styles: [
-    { id: 'beaded', label: 'Beaded', class: '' },
-    { id: 'chain', label: 'Chain', class: 'chain' },
-    { id: 'cuff', label: 'Cuff', class: 'cuff' },
-    { id: 'leather', label: 'Leather Wrap', class: 'leather' }
-  ],
-  colors: [
-    { id: 'gold', hex: '#C9A84C', label: 'Gold' },
-    { id: 'rose', hex: '#FFB5C2', label: 'Rose' },
-    { id: 'lavender', hex: '#D4BBFF', label: 'Lavender' },
-    { id: 'mint', hex: '#B8F0D8', label: 'Mint' },
-    { id: 'silver', hex: '#B8C4D0', label: 'Silver' },
-    { id: 'midnight', hex: '#2B2420', label: 'Midnight' }
-  ],
-  patterns: [
-    { id: 'solid', label: 'Solid', css: 'transparent' },
-    { id: 'stripes', label: 'Stripes', css: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 4px, transparent 4px, transparent 12px)' },
-    { id: 'dots', label: 'Dots', css: 'radial-gradient(circle, rgba(0,0,0,0.12) 2px, transparent 2px)' },
-    { id: 'hearts', label: 'Hearts', css: 'radial-gradient(circle at 50% 50%, rgba(255,100,150,0.15) 3px, transparent 3px)' },
-    { id: 'wave', label: 'Wave', css: 'repeating-radial-gradient(circle at 50% 50%, rgba(0,0,0,0.06) 0px, transparent 8px)' }
-  ],
-  basePrice: 45
+  basePrice: 45,
+  uploadPrice: 58,
+  simplePalettes: [
+    { name: 'Sunrise', colors: ['#F0A83B', '#E87A5D', '#F7D45B', '#97C96A', '#6ABBD8'] },
+    { name: 'Carnival', colors: ['#F05B7E', '#6AC7A6', '#F5B942', '#7B8BE7', '#FFDAD2'] },
+    { name: 'Sorbet', colors: ['#FFB3C8', '#FFD166', '#8FD6C1', '#7AA9FF', '#FFF1CC'] },
+    { name: 'Lagoon', colors: ['#5F89C9', '#7FC8C4', '#F0C257', '#F28D6B', '#F4F2E9'] },
+    { name: 'Festival', colors: ['#E05F4E', '#F3CF50', '#66B76F', '#4E9CC8', '#F7EEE1'] }
+  ]
 };
 
 const CART_KEY = 'braceletbyte_cart';
@@ -415,6 +402,225 @@ function initHomeFeatured() {
   }
 }
 
+function initCustomizeExperience() {
+  const previewWeave = document.getElementById('previewWeave');
+  const previewLetterStack = document.getElementById('previewLetterStack');
+  const previewUploadWrap = document.getElementById('previewUploadWrap');
+  const previewUploadImage = document.getElementById('previewUploadImage');
+  const previewStrip = document.getElementById('previewStrip');
+  const previewCaption = document.getElementById('previewCaption');
+  const customPrice = document.getElementById('customPrice');
+  if (!previewWeave || !previewLetterStack || !previewUploadWrap || !previewUploadImage || !previewStrip || !previewCaption || !customPrice) return;
+
+  const state = {
+    mode: 'simple',
+    simplePaletteIndex: 0,
+    letters: '',
+    letterBackground: '#FFF7E8',
+    letterColor: '#E878A0',
+    uploadName: '',
+    uploadNotes: '',
+    uploadImage: ''
+  };
+
+  const panels = {
+    simple: document.getElementById('simpleControls'),
+    letters: document.getElementById('letterControls'),
+    upload: document.getElementById('uploadControls')
+  };
+
+  function getPalette() {
+    return CUSTOMIZE.simplePalettes[state.simplePaletteIndex];
+  }
+
+  function nextPaletteIndex() {
+    let next = Math.floor(Math.random() * CUSTOMIZE.simplePalettes.length);
+    if (next === state.simplePaletteIndex) next = (next + 1) % CUSTOMIZE.simplePalettes.length;
+    return next;
+  }
+
+  function buildChevronSvg(colors, background = '#FFF8EC') {
+    const rowHeight = 52;
+    const width = 120;
+    const height = 780;
+    const rows = Math.ceil(height / rowHeight) + 1;
+    let svgShapes = `<rect width="${width}" height="${height}" fill="${background}"/>`;
+    for (let row = 0; row < rows; row += 1) {
+      const y = row * rowHeight;
+      colors.forEach((color, index) => {
+        const inset = 10 + index * 9;
+        const top = y + index * 8;
+        const stroke = 8;
+        svgShapes += `<path d="M ${inset} ${top} L ${width / 2} ${top + 22} L ${width - inset} ${top}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"/>`;
+      });
+      svgShapes += `<path d="M 0 ${y + 14} L ${width / 2} ${y + 40} L ${width} ${y + 14}" fill="none" stroke="rgba(77,59,54,0.18)" stroke-width="1"/>`;
+      svgShapes += `<path d="M 0 ${y + 34} L ${width / 2} ${y + 8} L ${width} ${y + 34}" fill="none" stroke="rgba(77,59,54,0.12)" stroke-width="1"/>`;
+    }
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${svgShapes}</svg>`;
+    return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+  }
+
+  function updatePrice() {
+    let price = CUSTOMIZE.basePrice;
+    if (state.mode === 'letters') price += state.letters.length * 3;
+    if (state.mode === 'upload') price = CUSTOMIZE.uploadPrice;
+    customPrice.textContent = `$${price}`;
+    return price;
+  }
+
+  function updateModePanels() {
+    Object.entries(panels).forEach(([key, panel]) => {
+      if (!panel) return;
+      panel.hidden = key !== state.mode;
+    });
+    document.querySelectorAll('#styleOptions .option-btn').forEach(btn => {
+      btn.classList.toggle('selected', btn.dataset.mode === state.mode);
+    });
+  }
+
+  function updatePreview() {
+    previewWeave.style.display = 'block';
+    previewLetterStack.style.display = 'none';
+    previewUploadWrap.hidden = true;
+    previewUploadWrap.style.display = 'none';
+    previewStrip.style.background = '#FFF8EC';
+    previewLetterStack.innerHTML = '';
+
+    if (state.mode === 'simple') {
+      const palette = getPalette();
+      previewWeave.style.backgroundImage = buildChevronSvg(palette.colors);
+      previewCaption.textContent = `${palette.name} chevron colors are live. Use Shuffle Colors to swap the V-line threads.`;
+    }
+
+    if (state.mode === 'letters') {
+      previewWeave.style.backgroundImage = 'none';
+      previewStrip.style.background = state.letterBackground;
+      previewLetterStack.style.display = 'flex';
+      previewLetterStack.style.color = state.letterColor;
+      const letters = state.letters || 'NAME';
+      previewLetterStack.innerHTML = letters.split('').map(letter => `<span>${letter === ' ' ? '&bull;' : letter}</span>`).join('');
+      previewCaption.textContent = 'Letters stack vertically on the bracelet. Change the bracelet background and the letter color below.';
+    }
+
+    if (state.mode === 'upload') {
+      previewWeave.style.backgroundImage = 'none';
+      previewStrip.style.background = 'linear-gradient(180deg, #F8EEF8, #F7F2EA)';
+      previewUploadWrap.hidden = false;
+      previewUploadWrap.style.display = 'block';
+      if (state.uploadImage) {
+        previewUploadImage.src = state.uploadImage;
+        previewUploadImage.style.opacity = '1';
+        previewCaption.textContent = state.uploadNotes
+          ? `Change request: ${state.uploadNotes}`
+          : 'Your uploaded design is ready. Add details below to explain what should change.';
+      } else {
+        previewUploadImage.removeAttribute('src');
+        previewUploadImage.style.opacity = '0';
+        previewCaption.textContent = 'Upload a bracelet image, then add notes about the changes you want made.';
+      }
+    }
+
+    updatePrice();
+  }
+
+  document.getElementById('styleOptions')?.addEventListener('click', e => {
+    const btn = e.target.closest('.option-btn[data-mode]');
+    if (!btn) return;
+    state.mode = btn.dataset.mode;
+    updateModePanels();
+    updatePreview();
+  });
+
+  document.getElementById('shuffleSimpleBtn')?.addEventListener('click', () => {
+    state.simplePaletteIndex = nextPaletteIndex();
+    updatePreview();
+  });
+
+  document.getElementById('letterInput')?.addEventListener('input', e => {
+    state.letters = e.target.value.slice(0, 12).toUpperCase();
+    e.target.value = state.letters;
+    updatePreview();
+  });
+
+  document.getElementById('letterBgOptions')?.addEventListener('click', e => {
+    const swatch = e.target.closest('.color-swatch');
+    if (!swatch) return;
+    state.letterBackground = swatch.dataset.color;
+    document.querySelectorAll('#letterBgOptions .color-swatch').forEach(btn => btn.classList.remove('selected'));
+    swatch.classList.add('selected');
+    updatePreview();
+  });
+
+  document.getElementById('letterTextOptions')?.addEventListener('click', e => {
+    const swatch = e.target.closest('.color-swatch');
+    if (!swatch) return;
+    state.letterColor = swatch.dataset.color;
+    document.querySelectorAll('#letterTextOptions .color-swatch').forEach(btn => btn.classList.remove('selected'));
+    swatch.classList.add('selected');
+    updatePreview();
+  });
+
+  document.getElementById('designUpload')?.addEventListener('change', e => {
+    const [file] = e.target.files || [];
+    if (!file) return;
+    state.uploadName = file.name;
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.uploadImage = reader.result;
+      updatePreview();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('designNotes')?.addEventListener('input', e => {
+    state.uploadNotes = e.target.value.trim();
+    if (state.mode === 'upload') updatePreview();
+  });
+
+  document.getElementById('addCustomBtn')?.addEventListener('click', () => {
+    const price = updatePrice();
+    let item = {
+      id: 'custom-' + Date.now(),
+      price,
+      emoji: '*',
+      custom: true
+    };
+
+    if (state.mode === 'simple') {
+      const palette = getPalette();
+      item = {
+        ...item,
+        name: 'Simple Chevron Bracelet',
+        bg: `linear-gradient(135deg, ${palette.colors[0]}, ${palette.colors[2]})`,
+        meta: `Simple mode | Palette: ${palette.name}`
+      };
+    }
+
+    if (state.mode === 'letters') {
+      item = {
+        ...item,
+        name: 'Letter Bracelet',
+        bg: `linear-gradient(135deg, ${state.letterBackground}, ${state.letterBackground})`,
+        meta: `Letters mode | Text: ${state.letters || 'NAME'} | Bracelet: ${state.letterBackground} | Letter color: ${state.letterColor}`
+      };
+    }
+
+    if (state.mode === 'upload') {
+      item = {
+        ...item,
+        name: 'Uploaded Pattern Bracelet',
+        bg: 'linear-gradient(135deg, #F8EEF8, #F7F2EA)',
+        meta: `Upload mode | File: ${state.uploadName || 'No file yet'} | Notes: ${state.uploadNotes || 'No notes yet'} | Source: friendship-bracelets.net`
+      };
+    }
+
+    addToCart(item);
+  });
+
+  updateModePanels();
+  updatePreview();
+}
+
 function initCustomizePage() {
   const state = { style: 'beaded', color: '#F5D061', pattern: 'solid', letters: '' };
   const previewRing = document.getElementById('previewRing');
@@ -604,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page) setActiveNav(page);
   if (page === 'home') initHomeFeatured();
   if (page === 'products') initProductsPage();
-  if (page === 'customize') initCustomizePage();
+  if (page === 'customize') initCustomizeExperience();
   if (page === 'cart') initCartPage();
 
   document.querySelectorAll('a[href^="#"]').forEach(a => {
