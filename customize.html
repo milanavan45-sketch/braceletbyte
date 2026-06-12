@@ -6,7 +6,7 @@
   <meta name="description" content="Design your custom bracelet with simple chevrons, vertical letters, or an uploaded reference pattern."/>
   <title>Customize - BraceletByte</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/styles.css?v=20260613"/>
+  <link rel="stylesheet" href="css/styles.css?v=20260614"/>
 </head>
 <body data-page="customize">
 
@@ -71,17 +71,68 @@
 
     <div class="customize-mode-panel" id="simpleControls">
       <div class="option-group">
-        <label>Chevron Colors</label>
-        <button type="button" class="btn-secondary" id="shuffleSimpleBtn">Shuffle Colors</button>
-        <p class="engraving-hint">Each shuffle swaps the V-line thread colors while keeping the bracelet vertical in the square preview.</p>
+        <label>Chevron Thread Colors</label>
+        <div class="simple-color-grid" id="simpleColorGrid">
+          <div class="simple-color-slot">
+            <span>Color 1</span>
+            <div class="color-options simple-color-options" data-color-slot="0">
+              <button type="button" class="color-swatch selected" data-color="#F0A83B" style="background:#F0A83B" aria-label="Orange"></button>
+              <button type="button" class="color-swatch" data-color="#F05B7E" style="background:#F05B7E" aria-label="Pink"></button>
+              <button type="button" class="color-swatch" data-color="#5F89C9" style="background:#5F89C9" aria-label="Blue"></button>
+              <button type="button" class="color-swatch" data-color="#66B76F" style="background:#66B76F" aria-label="Green"></button>
+              <button type="button" class="color-swatch" data-color="#FFD166" style="background:#FFD166" aria-label="Yellow"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 2</span>
+            <div class="color-options simple-color-options" data-color-slot="1">
+              <button type="button" class="color-swatch selected" data-color="#E87A5D" style="background:#E87A5D" aria-label="Coral"></button>
+              <button type="button" class="color-swatch" data-color="#7B8BE7" style="background:#7B8BE7" aria-label="Periwinkle"></button>
+              <button type="button" class="color-swatch" data-color="#8FD6C1" style="background:#8FD6C1" aria-label="Seafoam"></button>
+              <button type="button" class="color-swatch" data-color="#C98421" style="background:#C98421" aria-label="Amber"></button>
+              <button type="button" class="color-swatch" data-color="#FDE2EF" style="background:#FDE2EF" aria-label="Soft blush"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 3</span>
+            <div class="color-options simple-color-options" data-color-slot="2">
+              <button type="button" class="color-swatch selected" data-color="#F7D45B" style="background:#F7D45B" aria-label="Golden yellow"></button>
+              <button type="button" class="color-swatch" data-color="#4A86C5" style="background:#4A86C5" aria-label="Blue"></button>
+              <button type="button" class="color-swatch" data-color="#FFB3C8" style="background:#FFB3C8" aria-label="Light pink"></button>
+              <button type="button" class="color-swatch" data-color="#F28D6B" style="background:#F28D6B" aria-label="Peach"></button>
+              <button type="button" class="color-swatch" data-color="#5E9A64" style="background:#5E9A64" aria-label="Green"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 4</span>
+            <div class="color-options simple-color-options" data-color-slot="3">
+              <button type="button" class="color-swatch selected" data-color="#97C96A" style="background:#97C96A" aria-label="Lime green"></button>
+              <button type="button" class="color-swatch" data-color="#E05F4E" style="background:#E05F4E" aria-label="Red orange"></button>
+              <button type="button" class="color-swatch" data-color="#7AA9FF" style="background:#7AA9FF" aria-label="Sky blue"></button>
+              <button type="button" class="color-swatch" data-color="#F3CF50" style="background:#F3CF50" aria-label="Mustard"></button>
+              <button type="button" class="color-swatch" data-color="#51345D" style="background:#51345D" aria-label="Plum"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 5</span>
+            <div class="color-options simple-color-options" data-color-slot="4">
+              <button type="button" class="color-swatch selected" data-color="#6ABBD8" style="background:#6ABBD8" aria-label="Aqua"></button>
+              <button type="button" class="color-swatch" data-color="#F4F2E9" style="background:#F4F2E9" aria-label="Ivory"></button>
+              <button type="button" class="color-swatch" data-color="#F7EEE1" style="background:#F7EEE1" aria-label="Warm ivory"></button>
+              <button type="button" class="color-swatch" data-color="#C1B3C8" style="background:#C1B3C8" aria-label="Lavender gray"></button>
+              <button type="button" class="color-swatch" data-color="#EAF4FF" style="background:#EAF4FF" aria-label="Pale sky"></button>
+            </div>
+          </div>
+        </div>
+        <p class="engraving-hint">Pick five repeating thread colors for the simple chevron bracelet.</p>
       </div>
     </div>
 
     <div class="customize-mode-panel" id="letterControls" hidden>
       <div class="option-group">
         <label for="letterInput">Letters</label>
-        <input type="text" class="engraving-input" id="letterInput" placeholder="Enter letters vertically (max 12)" maxlength="12"/>
-        <p class="engraving-hint">Letters stack vertically on the bracelet preview.</p>
+        <input type="text" class="engraving-input" id="letterInput" placeholder="Enter letters across the bracelet (max 12)" maxlength="12"/>
+        <p class="engraving-hint">Letters display horizontally across the bracelet preview.</p>
       </div>
       <div class="option-group">
         <label id="letter-bg-label">Bracelet Background</label>
@@ -135,8 +186,8 @@
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="js/shared-ui.js?v=20260613"></script>
+  <script src="js/shared-ui.js?v=20260614"></script>
 <script type="module" src="js/Auth.js"></script>
-<script src="js/app.js?v=20260613"></script>
+  <script src="js/app.js?v=20260614"></script>
 </body>
 </html>
