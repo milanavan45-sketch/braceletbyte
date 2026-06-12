@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Design your custom bracelet — pick style, color, pattern, and engraving letters."/>
-  <title>Customize — BraceletByte</title>
+  <meta name="description" content="Design your custom bracelet with simple chevrons, vertical letters, or an uploaded reference pattern."/>
+  <title>Customize - BraceletByte</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/styles.css?v=20260612"/>
+  <link rel="stylesheet" href="css/styles.css?v=20260613"/>
 </head>
 <body data-page="customize">
 
@@ -25,7 +25,7 @@
       <a class="nav-link" href="cart.html" data-page="cart">Cart</a>
     </nav>
     <div class="header-actions">
-      <a class="cart-link" href="cart.html" aria-label="View shopping cart">🛒 Cart <span class="badge" data-cart-count style="display:none">0</span></a>
+      <a class="cart-link" href="cart.html" aria-label="View shopping cart">Cart <span class="badge" data-cart-count style="display:none">0</span></a>
     </div>
   </div>
   <nav class="mobile-nav" aria-label="Mobile navigation">
@@ -38,72 +38,105 @@
 
 <main id="main-content">
 <div class="page-hero">
-  <h1>Design Your Bracelet 🎨</h1>
-  <p>Pick style, color, pattern & letters — watch your creation sparkle live!</p>
+  <h1>Design Your Bracelet</h1>
+  <p>Choose a bracelet mode, personalize the preview, and send your design idea exactly how you want it made.</p>
 </div>
 
 <div class="customize-layout">
   <div class="preview-panel" aria-live="polite" aria-label="Bracelet preview">
     <p class="preview-label">Live Preview</p>
-    <div class="bracelet-preview">
-      <div class="preview-beads" id="previewBeads"></div>
-      <div class="preview-pattern" id="previewPattern"></div>
-      <div class="preview-ring" id="previewRing"></div>
-      <div class="preview-engraving" id="previewEngraving"></div>
+    <div class="bracelet-preview" id="braceletPreview">
+      <div class="preview-strip-frame">
+        <div class="preview-strip" id="previewStrip">
+          <div class="preview-weave" id="previewWeave"></div>
+          <div class="preview-letter-stack" id="previewLetterStack" aria-hidden="true"></div>
+          <div class="preview-upload-wrap" id="previewUploadWrap" hidden>
+            <img id="previewUploadImage" alt="Uploaded bracelet reference preview"/>
+          </div>
+        </div>
+      </div>
     </div>
+    <p class="preview-caption" id="previewCaption">Chevron threads update live as you shuffle colors.</p>
   </div>
 
   <div class="options-panel">
     <div class="option-group">
       <label id="style-label">Style</label>
       <div class="style-options" id="styleOptions" role="group" aria-labelledby="style-label">
-        <button type="button" class="option-btn selected" data-value="beaded">Beaded</button>
-        <button type="button" class="option-btn" data-value="chain">Chain</button>
-        <button type="button" class="option-btn" data-value="cuff">Cuff</button>
-        <button type="button" class="option-btn" data-value="leather">Leather Wrap</button>
+        <button type="button" class="option-btn selected" data-mode="simple">Simple</button>
+        <button type="button" class="option-btn" data-mode="letters">Letters</button>
+        <button type="button" class="option-btn" data-mode="upload">Pattern Upload</button>
       </div>
     </div>
-    <div class="option-group">
-      <label id="color-label">Color</label>
-      <div class="color-options" id="colorOptions" role="group" aria-labelledby="color-label">
-        <button type="button" class="color-swatch selected" data-color="#F5D061" style="background:#F5D061" aria-label="Gold"></button>
-        <button type="button" class="color-swatch" data-color="#FFB5C2" style="background:#FFB5C2" aria-label="Rose"></button>
-        <button type="button" class="color-swatch" data-color="#D4BBFF" style="background:#D4BBFF" aria-label="Lavender"></button>
-        <button type="button" class="color-swatch" data-color="#B8F0D8" style="background:#B8F0D8" aria-label="Mint"></button>
-        <button type="button" class="color-swatch" data-color="#B8C4D0" style="background:#B8C4D0" aria-label="Silver"></button>
-        <button type="button" class="color-swatch" data-color="#2B2420" style="background:#2B2420" aria-label="Midnight"></button>
+
+    <div class="customize-mode-panel" id="simpleControls">
+      <div class="option-group">
+        <label>Chevron Colors</label>
+        <button type="button" class="btn-secondary" id="shuffleSimpleBtn">Shuffle Colors</button>
+        <p class="engraving-hint">Each shuffle swaps the V-line thread colors while keeping the bracelet vertical in the square preview.</p>
       </div>
     </div>
-    <div class="option-group">
-      <label id="pattern-label">Pattern</label>
-      <div class="pattern-options" id="patternOptions" role="group" aria-labelledby="pattern-label">
-        <button type="button" class="option-btn selected" data-value="solid">Solid</button>
-        <button type="button" class="option-btn" data-value="stripes">Stripes</button>
-        <button type="button" class="option-btn" data-value="dots">Dots</button>
-        <button type="button" class="option-btn" data-value="hearts">Hearts</button>
-        <button type="button" class="option-btn" data-value="wave">Wave</button>
+
+    <div class="customize-mode-panel" id="letterControls" hidden>
+      <div class="option-group">
+        <label for="letterInput">Letters</label>
+        <input type="text" class="engraving-input" id="letterInput" placeholder="Enter letters vertically (max 12)" maxlength="12"/>
+        <p class="engraving-hint">Letters stack vertically on the bracelet preview.</p>
+      </div>
+      <div class="option-group">
+        <label id="letter-bg-label">Bracelet Background</label>
+        <div class="color-options" id="letterBgOptions" role="group" aria-labelledby="letter-bg-label">
+          <button type="button" class="color-swatch selected" data-color="#FFF7E8" style="background:#FFF7E8" aria-label="Warm cream"></button>
+          <button type="button" class="color-swatch" data-color="#FDE2EF" style="background:#FDE2EF" aria-label="Soft blush"></button>
+          <button type="button" class="color-swatch" data-color="#EAF4FF" style="background:#EAF4FF" aria-label="Pale sky"></button>
+          <button type="button" class="color-swatch" data-color="#EFFAE9" style="background:#EFFAE9" aria-label="Light mint"></button>
+          <button type="button" class="color-swatch" data-color="#FFF2C7" style="background:#FFF2C7" aria-label="Butter yellow"></button>
+        </div>
+      </div>
+      <div class="option-group">
+        <label id="letter-text-label">Letter Color</label>
+        <div class="color-options" id="letterTextOptions" role="group" aria-labelledby="letter-text-label">
+          <button type="button" class="color-swatch selected" data-color="#E878A0" style="background:#E878A0" aria-label="Rose pink"></button>
+          <button type="button" class="color-swatch" data-color="#C98421" style="background:#C98421" aria-label="Amber"></button>
+          <button type="button" class="color-swatch" data-color="#4A86C5" style="background:#4A86C5" aria-label="Blue"></button>
+          <button type="button" class="color-swatch" data-color="#5E9A64" style="background:#5E9A64" aria-label="Green"></button>
+          <button type="button" class="color-swatch" data-color="#51345D" style="background:#51345D" aria-label="Plum"></button>
+        </div>
+      </div>
+      <p class="engraving-hint">+$3 per letter.</p>
+    </div>
+
+    <div class="customize-mode-panel" id="uploadControls" hidden>
+      <div class="option-group">
+        <label for="designUpload">Upload Your Design</label>
+        <input type="file" class="field-input" id="designUpload" accept="image/*"/>
+        <p class="engraving-hint">Upload the bracelet picture or pattern you want to base your design on.</p>
+      </div>
+      <div class="option-group">
+        <label for="designNotes">Details To Change</label>
+        <textarea class="field-input design-notes-input" id="designNotes" rows="4" placeholder="Write what you want changed: colors, letters, spacing, names, charms, anything important."></textarea>
+      </div>
+      <div class="design-link-card">
+        <strong>Need a pattern source?</strong>
+        <a href="https://friendship-bracelets.net/" target="_blank" rel="noopener noreferrer">Browse friendship-bracelets.net</a>
       </div>
     </div>
-    <div class="option-group">
-      <label for="engravingInput">Letters / Engraving</label>
-      <input type="text" class="engraving-input" id="engravingInput" placeholder="Enter name or initials (max 12)" maxlength="12" aria-describedby="engrave-hint"/>
-      <p class="engraving-hint" id="engrave-hint">+$3 per letter · shown on your preview</p>
-    </div>
+
     <div class="customize-price"><span>Your price</span><span id="customPrice">$45</span></div>
-    <button type="button" class="checkout-btn" id="addCustomBtn">Add to Cart ✨</button>
+    <button type="button" class="checkout-btn" id="addCustomBtn">Add to Cart</button>
   </div>
 </div>
 </main>
 
 <footer role="contentinfo">
-  <span class="footer-logo">BraceletByte ✨</span>
+  <span class="footer-logo">BraceletByte</span>
   <div class="footer-links"><a href="index.html">Home</a><a href="products.html">Products</a><a href="customize.html">Customize</a><a href="cart.html">Cart</a></div>
   <span>© 2026 BraceletByte</span>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="js/shared-ui.js?v=20260612"></script>
+<script src="js/shared-ui.js?v=20260613"></script>
 <script type="module" src="js/Auth.js"></script>
-<script src="js/app.js?v=20260612"></script>
+<script src="js/app.js?v=20260613"></script>
 </body>
 </html>
