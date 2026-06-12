@@ -408,13 +408,14 @@ function initCustomizeExperience() {
   const previewUploadWrap = document.getElementById('previewUploadWrap');
   const previewUploadImage = document.getElementById('previewUploadImage');
   const previewStrip = document.getElementById('previewStrip');
+  const previewFrame = previewStrip?.closest('.preview-strip-frame');
   const previewCaption = document.getElementById('previewCaption');
   const customPrice = document.getElementById('customPrice');
   if (!previewWeave || !previewLetterStack || !previewUploadWrap || !previewUploadImage || !previewStrip || !previewCaption || !customPrice) return;
 
   const state = {
     mode: 'simple',
-    simplePaletteIndex: 0,
+    simpleColors: ['#F0A83B', '#E87A5D', '#F7D45B', '#97C96A', '#6ABBD8'],
     letters: '',
     letterBackground: '#FFF7E8',
     letterColor: '#E878A0',
@@ -429,32 +430,20 @@ function initCustomizeExperience() {
     upload: document.getElementById('uploadControls')
   };
 
-  function getPalette() {
-    return CUSTOMIZE.simplePalettes[state.simplePaletteIndex];
-  }
-
-  function nextPaletteIndex() {
-    let next = Math.floor(Math.random() * CUSTOMIZE.simplePalettes.length);
-    if (next === state.simplePaletteIndex) next = (next + 1) % CUSTOMIZE.simplePalettes.length;
-    return next;
-  }
-
   function buildChevronSvg(colors, background = '#FFF8EC') {
-    const rowHeight = 52;
+    const bandHeight = 11;
     const width = 120;
-    const height = 780;
-    const rows = Math.ceil(height / rowHeight) + 1;
+    const height = 860;
+    const repeatHeight = bandHeight * colors.length;
+    const overlap = 1.5;
+    const mid = width / 2;
     let svgShapes = `<rect width="${width}" height="${height}" fill="${background}"/>`;
-    for (let row = 0; row < rows; row += 1) {
-      const y = row * rowHeight;
+    for (let startY = -repeatHeight; startY <= height + repeatHeight; startY += repeatHeight) {
       colors.forEach((color, index) => {
-        const inset = 10 + index * 9;
-        const top = y + index * 8;
-        const stroke = 8;
-        svgShapes += `<path d="M ${inset} ${top} L ${width / 2} ${top + 22} L ${width - inset} ${top}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"/>`;
+        const top = startY + index * bandHeight;
+        const bottom = top + bandHeight + overlap;
+        svgShapes += `<polygon points="0,${top} ${mid},${top + (repeatHeight / 2)} ${width},${top} ${width},${bottom} ${mid},${bottom + (repeatHeight / 2)} 0,${bottom}" fill="${color}"/>`;
       });
-      svgShapes += `<path d="M 0 ${y + 14} L ${width / 2} ${y + 40} L ${width} ${y + 14}" fill="none" stroke="rgba(77,59,54,0.18)" stroke-width="1"/>`;
-      svgShapes += `<path d="M 0 ${y + 34} L ${width / 2} ${y + 8} L ${width} ${y + 34}" fill="none" stroke="rgba(77,59,54,0.12)" stroke-width="1"/>`;
     }
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${svgShapes}</svg>`;
     return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
@@ -472,6 +461,7 @@ function initCustomizeExperience() {
     Object.entries(panels).forEach(([key, panel]) => {
       if (!panel) return;
       panel.hidden = key !== state.mode;
+      panel.style.display = key === state.mode ? 'grid' : 'none';
     });
     document.querySelectorAll('#styleOptions .option-btn').forEach(btn => {
       btn.classList.toggle('selected', btn.dataset.mode === state.mode);
@@ -479,31 +469,40 @@ function initCustomizeExperience() {
   }
 
   function updatePreview() {
-    previewWeave.style.display = 'block';
+    previewWeave.style.display = 'none';
+    previewWeave.style.backgroundImage = 'none';
+    previewWeave.style.backgroundSize = '';
+    previewWeave.style.backgroundPosition = '';
+    previewWeave.style.backgroundRepeat = '';
     previewLetterStack.style.display = 'none';
     previewUploadWrap.hidden = true;
     previewUploadWrap.style.display = 'none';
     previewStrip.style.background = '#FFF8EC';
+    previewStrip.classList.remove('horizontal');
+    previewFrame?.classList.remove('horizontal-frame');
     previewLetterStack.innerHTML = '';
 
     if (state.mode === 'simple') {
-      const palette = getPalette();
-      previewWeave.style.backgroundImage = buildChevronSvg(palette.colors);
-      previewCaption.textContent = `${palette.name} chevron colors are live. Use Shuffle Colors to swap the V-line threads.`;
+      previewWeave.style.display = 'block';
+      previewWeave.style.backgroundImage = buildChevronSvg(state.simpleColors);
+      previewWeave.style.backgroundSize = '100% 100%';
+      previewWeave.style.backgroundPosition = 'center center';
+      previewWeave.style.backgroundRepeat = 'no-repeat';
+      previewCaption.textContent = 'Your five thread colors repeat neatly through the chevron bracelet preview.';
     }
 
     if (state.mode === 'letters') {
-      previewWeave.style.backgroundImage = 'none';
       previewStrip.style.background = state.letterBackground;
+      previewStrip.classList.add('horizontal');
+      previewFrame?.classList.add('horizontal-frame');
       previewLetterStack.style.display = 'flex';
       previewLetterStack.style.color = state.letterColor;
       const letters = state.letters || 'NAME';
       previewLetterStack.innerHTML = letters.split('').map(letter => `<span>${letter === ' ' ? '&bull;' : letter}</span>`).join('');
-      previewCaption.textContent = 'Letters stack vertically on the bracelet. Change the bracelet background and the letter color below.';
+      previewCaption.textContent = 'Letters run horizontally across the bracelet. Change the bracelet background and the letter color below.';
     }
 
     if (state.mode === 'upload') {
-      previewWeave.style.backgroundImage = 'none';
       previewStrip.style.background = 'linear-gradient(180deg, #F8EEF8, #F7F2EA)';
       previewUploadWrap.hidden = false;
       previewUploadWrap.style.display = 'block';
@@ -531,8 +530,15 @@ function initCustomizeExperience() {
     updatePreview();
   });
 
-  document.getElementById('shuffleSimpleBtn')?.addEventListener('click', () => {
-    state.simplePaletteIndex = nextPaletteIndex();
+  document.getElementById('simpleColorGrid')?.addEventListener('click', e => {
+    const swatch = e.target.closest('.color-swatch');
+    const group = e.target.closest('.simple-color-options');
+    if (!swatch || !group) return;
+    const slot = Number(group.dataset.colorSlot);
+    if (!Number.isInteger(slot)) return;
+    state.simpleColors[slot] = swatch.dataset.color;
+    group.querySelectorAll('.color-swatch').forEach(btn => btn.classList.remove('selected'));
+    swatch.classList.add('selected');
     updatePreview();
   });
 
@@ -587,12 +593,11 @@ function initCustomizeExperience() {
     };
 
     if (state.mode === 'simple') {
-      const palette = getPalette();
       item = {
         ...item,
         name: 'Simple Chevron Bracelet',
-        bg: `linear-gradient(135deg, ${palette.colors[0]}, ${palette.colors[2]})`,
-        meta: `Simple mode | Palette: ${palette.name}`
+        bg: `linear-gradient(135deg, ${state.simpleColors[0]}, ${state.simpleColors[3]})`,
+        meta: `Simple mode | Colors: ${state.simpleColors.join(', ')}`
       };
     }
 
@@ -735,6 +740,7 @@ function renderCartPage() {
       return;
     }
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const tax = subtotal * 0.13;
     const shipping = subtotal >= 75 ? 0 : 5.99;
     container.innerHTML = `
       <div class="cart-items">${cart.map(item => `
@@ -750,8 +756,9 @@ function renderCartPage() {
       </div>
       <div class="cart-summary">
         <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+        <div class="summary-row"><span>Tax (13%)</span><span>$${tax.toFixed(2)}</span></div>
         <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? 'Free ✨' : '$' + shipping.toFixed(2)}</span></div>
-        <div class="summary-row total"><span>Total</span><span>$${(subtotal + shipping).toFixed(2)}</span></div>
+        <div class="summary-row total"><span>Total</span><span>$${(subtotal + tax + shipping).toFixed(2)}</span></div>
         <p class="checkout-note" role="note">🔒 No card details ever — we only ask for your name</p>
         <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout 💌</button>
       </div>
@@ -781,8 +788,9 @@ function startCheckout() {
       saveUser?.({ name, email: getUser?.()?.email || '' });
       const cart = getCart();
       const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const tax = subtotal * 0.13;
       const shipping = subtotal >= 75 ? 0 : 5.99;
-      const total = subtotal + shipping;
+      const total = subtotal + tax + shipping;
       const order = {
         date: new Date().toLocaleString(),
         total: `$${total.toFixed(2)}`,
