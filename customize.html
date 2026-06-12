@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Design your custom bracelet with simple chevrons, vertical letters, or an uploaded reference pattern."/>
+  <title>Customize - BraceletByte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/styles.css?v=20260614"/>
+</head>
+<body data-page="customize">
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header role="banner">
+  <div class="header-top">
+    <a class="logo" href="index.html" aria-label="BraceletByte home">
+      <svg class="logo-icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="21" fill="#FFF8FC" stroke="#FFE0EE" stroke-width="1.5"/><circle cx="22" cy="22" r="13" stroke="#E878A0" stroke-width="3" fill="none"/><circle cx="22" cy="9" r="3" fill="#F5D061"/><circle cx="35" cy="22" r="2.5" fill="#D4BBFF"/><circle cx="22" cy="35" r="3" fill="#FFB5C2"/></svg>
+      <div class="logo-text"><span class="logo-name">BraceletByte</span><span class="logo-sub">Sparkle & Wrist Magic</span></div>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-link" href="index.html" data-page="home">Home</a>
+      <a class="nav-link" href="products.html" data-page="products">Products</a>
+      <a class="nav-link active" href="customize.html" data-page="customize">Customize</a>
+      <a class="nav-link" href="cart.html" data-page="cart">Cart</a>
+    </nav>
+    <div class="header-actions">
+      <a class="cart-link" href="cart.html" aria-label="View shopping cart">Cart <span class="badge" data-cart-count style="display:none">0</span></a>
+    </div>
+  </div>
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a class="nav-link" href="index.html" data-page="home">Home</a>
+    <a class="nav-link" href="products.html" data-page="products">Products</a>
+    <a class="nav-link active" href="customize.html" data-page="customize">Customize</a>
+    <a class="nav-link" href="cart.html" data-page="cart">Cart</a>
+  </nav>
+</header>
+
+<main id="main-content">
+<div class="page-hero">
+  <h1>Design Your Bracelet</h1>
+  <p>Choose a bracelet mode, personalize the preview, and send your design idea exactly how you want it made.</p>
+</div>
+
+<div class="customize-layout">
+  <div class="preview-panel" aria-live="polite" aria-label="Bracelet preview">
+    <p class="preview-label">Live Preview</p>
+    <div class="bracelet-preview" id="braceletPreview">
+      <div class="preview-strip-frame">
+        <div class="preview-strip" id="previewStrip">
+          <div class="preview-weave" id="previewWeave"></div>
+          <div class="preview-letter-stack" id="previewLetterStack" aria-hidden="true"></div>
+          <div class="preview-upload-wrap" id="previewUploadWrap" hidden>
+            <img id="previewUploadImage" alt="Uploaded bracelet reference preview"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="preview-caption" id="previewCaption">Chevron threads update live as you shuffle colors.</p>
+  </div>
+
+  <div class="options-panel">
+    <div class="option-group">
+      <label id="style-label">Style</label>
+      <div class="style-options" id="styleOptions" role="group" aria-labelledby="style-label">
+        <button type="button" class="option-btn selected" data-mode="simple">Simple</button>
+        <button type="button" class="option-btn" data-mode="letters">Letters</button>
+        <button type="button" class="option-btn" data-mode="upload">Pattern Upload</button>
+      </div>
+    </div>
+
+    <div class="customize-mode-panel" id="simpleControls">
+      <div class="option-group">
+        <label>Chevron Thread Colors</label>
+        <div class="simple-color-grid" id="simpleColorGrid">
+          <div class="simple-color-slot">
+            <span>Color 1</span>
+            <div class="color-options simple-color-options" data-color-slot="0">
+              <button type="button" class="color-swatch selected" data-color="#F0A83B" style="background:#F0A83B" aria-label="Orange"></button>
+              <button type="button" class="color-swatch" data-color="#F05B7E" style="background:#F05B7E" aria-label="Pink"></button>
+              <button type="button" class="color-swatch" data-color="#5F89C9" style="background:#5F89C9" aria-label="Blue"></button>
+              <button type="button" class="color-swatch" data-color="#66B76F" style="background:#66B76F" aria-label="Green"></button>
+              <button type="button" class="color-swatch" data-color="#FFD166" style="background:#FFD166" aria-label="Yellow"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 2</span>
+            <div class="color-options simple-color-options" data-color-slot="1">
+              <button type="button" class="color-swatch selected" data-color="#E87A5D" style="background:#E87A5D" aria-label="Coral"></button>
+              <button type="button" class="color-swatch" data-color="#7B8BE7" style="background:#7B8BE7" aria-label="Periwinkle"></button>
+              <button type="button" class="color-swatch" data-color="#8FD6C1" style="background:#8FD6C1" aria-label="Seafoam"></button>
+              <button type="button" class="color-swatch" data-color="#C98421" style="background:#C98421" aria-label="Amber"></button>
+              <button type="button" class="color-swatch" data-color="#FDE2EF" style="background:#FDE2EF" aria-label="Soft blush"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 3</span>
+            <div class="color-options simple-color-options" data-color-slot="2">
+              <button type="button" class="color-swatch selected" data-color="#F7D45B" style="background:#F7D45B" aria-label="Golden yellow"></button>
+              <button type="button" class="color-swatch" data-color="#4A86C5" style="background:#4A86C5" aria-label="Blue"></button>
+              <button type="button" class="color-swatch" data-color="#FFB3C8" style="background:#FFB3C8" aria-label="Light pink"></button>
+              <button type="button" class="color-swatch" data-color="#F28D6B" style="background:#F28D6B" aria-label="Peach"></button>
+              <button type="button" class="color-swatch" data-color="#5E9A64" style="background:#5E9A64" aria-label="Green"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 4</span>
+            <div class="color-options simple-color-options" data-color-slot="3">
+              <button type="button" class="color-swatch selected" data-color="#97C96A" style="background:#97C96A" aria-label="Lime green"></button>
+              <button type="button" class="color-swatch" data-color="#E05F4E" style="background:#E05F4E" aria-label="Red orange"></button>
+              <button type="button" class="color-swatch" data-color="#7AA9FF" style="background:#7AA9FF" aria-label="Sky blue"></button>
+              <button type="button" class="color-swatch" data-color="#F3CF50" style="background:#F3CF50" aria-label="Mustard"></button>
+              <button type="button" class="color-swatch" data-color="#51345D" style="background:#51345D" aria-label="Plum"></button>
+            </div>
+          </div>
+          <div class="simple-color-slot">
+            <span>Color 5</span>
+            <div class="color-options simple-color-options" data-color-slot="4">
+              <button type="button" class="color-swatch selected" data-color="#6ABBD8" style="background:#6ABBD8" aria-label="Aqua"></button>
+              <button type="button" class="color-swatch" data-color="#F4F2E9" style="background:#F4F2E9" aria-label="Ivory"></button>
+              <button type="button" class="color-swatch" data-color="#F7EEE1" style="background:#F7EEE1" aria-label="Warm ivory"></button>
+              <button type="button" class="color-swatch" data-color="#C1B3C8" style="background:#C1B3C8" aria-label="Lavender gray"></button>
+              <button type="button" class="color-swatch" data-color="#EAF4FF" style="background:#EAF4FF" aria-label="Pale sky"></button>
+            </div>
+          </div>
+        </div>
+        <p class="engraving-hint">Pick five repeating thread colors for the simple chevron bracelet.</p>
+      </div>
+    </div>
+
+    <div class="customize-mode-panel" id="letterControls" hidden>
+      <div class="option-group">
+        <label for="letterInput">Letters</label>
+        <input type="text" class="engraving-input" id="letterInput" placeholder="Enter letters across the bracelet (max 12)" maxlength="12"/>
+        <p class="engraving-hint">Letters display horizontally across the bracelet preview.</p>
+      </div>
+      <div class="option-group">
+        <label id="letter-bg-label">Bracelet Background</label>
+        <div class="color-options" id="letterBgOptions" role="group" aria-labelledby="letter-bg-label">
+          <button type="button" class="color-swatch selected" data-color="#FFF7E8" style="background:#FFF7E8" aria-label="Warm cream"></button>
+          <button type="button" class="color-swatch" data-color="#FDE2EF" style="background:#FDE2EF" aria-label="Soft blush"></button>
+          <button type="button" class="color-swatch" data-color="#EAF4FF" style="background:#EAF4FF" aria-label="Pale sky"></button>
+          <button type="button" class="color-swatch" data-color="#EFFAE9" style="background:#EFFAE9" aria-label="Light mint"></button>
+          <button type="button" class="color-swatch" data-color="#FFF2C7" style="background:#FFF2C7" aria-label="Butter yellow"></button>
+        </div>
+      </div>
+      <div class="option-group">
+        <label id="letter-text-label">Letter Color</label>
+        <div class="color-options" id="letterTextOptions" role="group" aria-labelledby="letter-text-label">
+          <button type="button" class="color-swatch selected" data-color="#E878A0" style="background:#E878A0" aria-label="Rose pink"></button>
+          <button type="button" class="color-swatch" data-color="#C98421" style="background:#C98421" aria-label="Amber"></button>
+          <button type="button" class="color-swatch" data-color="#4A86C5" style="background:#4A86C5" aria-label="Blue"></button>
+          <button type="button" class="color-swatch" data-color="#5E9A64" style="background:#5E9A64" aria-label="Green"></button>
+          <button type="button" class="color-swatch" data-color="#51345D" style="background:#51345D" aria-label="Plum"></button>
+        </div>
+      </div>
+      <p class="engraving-hint">+$3 per letter.</p>
+    </div>
+
+    <div class="customize-mode-panel" id="uploadControls" hidden>
+      <div class="option-group">
+        <label for="designUpload">Upload Your Design</label>
+        <input type="file" class="field-input" id="designUpload" accept="image/*"/>
+        <p class="engraving-hint">Upload the bracelet picture or pattern you want to base your design on.</p>
+      </div>
+      <div class="option-group">
+        <label for="designNotes">Details To Change</label>
+        <textarea class="field-input design-notes-input" id="designNotes" rows="4" placeholder="Write what you want changed: colors, letters, spacing, names, charms, anything important."></textarea>
+      </div>
+      <div class="design-link-card">
+        <strong>Need a pattern source?</strong>
+        <a href="https://friendship-bracelets.net/" target="_blank" rel="noopener noreferrer">Browse friendship-bracelets.net</a>
+      </div>
+    </div>
+
+    <div class="customize-price"><span>Your price</span><span id="customPrice">$45</span></div>
+    <button type="button" class="checkout-btn" id="addCustomBtn">Add to Cart</button>
+  </div>
+</div>
+</main>
+
+<footer role="contentinfo">
+  <span class="footer-logo">BraceletByte</span>
+  <div class="footer-links"><a href="index.html">Home</a><a href="products.html">Products</a><a href="customize.html">Customize</a><a href="cart.html">Cart</a></div>
+  <span>© 2026 BraceletByte</span>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/shared-ui.js?v=20260614"></script>
+<script type="module" src="js/Auth.js"></script>
+  <script src="js/app.js?v=20260614"></script>
+</body>
+</html>
