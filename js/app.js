@@ -357,51 +357,54 @@ function initProductModal() {
   });
 }
 
-function renderCategoryBar(container) {
-  if (!container) return;
-  container.innerHTML = CATEGORIES.map((c, i) =>
-    `<button class="cat-chip${i === 0 ? ' active' : ''}" data-cat="${c.id}" aria-pressed="${i === 0}"><span class="cat-emoji" aria-hidden="true">${c.emoji}</span> ${c.label}</button>`
+function renderCategoryDropdown(select) {
+  if (!select) return;
+  select.innerHTML = CATEGORIES.map(c =>
+    `<option value="${c.id}">${c.label}</option>`
   ).join('');
-  container.querySelectorAll('.cat-chip').forEach(chip => {
-    chip.addEventListener('click', () => filterProducts(chip.dataset.cat, chip));
-  });
+  select.addEventListener('change', () => filterProducts(select.value));
 }
 
 function initProductsPage() {
   const grid = document.getElementById('productGrid');
-  const catBar = document.querySelector('.categories-scroll');
-  renderCategoryBar(catBar);
+  const categorySelect = document.getElementById('categorySelect');
+  renderCategoryDropdown(categorySelect);
   if (grid) {
     grid.innerHTML = PRODUCTS.map(renderProductCard).join('');
     bindProductGrid(grid);
   }
-  document.getElementById('searchInput')?.addEventListener('input', e => handleSearch(e.target.value));
+  document.getElementById('searchInput')?.addEventListener('input', () => applyProductFilters());
   const urlCat = new URLSearchParams(window.location.search).get('cat');
   if (urlCat) {
-    const chip = document.querySelector(`.cat-chip[data-cat="${urlCat}"]`);
-    if (chip) filterProducts(urlCat, chip);
+    const option = categorySelect?.querySelector(`option[value="${urlCat}"]`);
+    if (option) {
+      categorySelect.value = urlCat;
+      filterProducts(urlCat);
+    }
   }
 }
 
-function filterProducts(cat, btn) {
-  document.querySelectorAll('.cat-chip').forEach(c => {
-    const active = c === btn;
-    c.classList.toggle('active', active);
-    c.setAttribute('aria-pressed', String(active));
-  });
-  document.querySelectorAll('.product-card').forEach(card => {
-    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
-  });
-  if (cat !== 'all') { showToast(`Showing ${cat} ✨`); announce(`Filtered to ${cat} category`); }
-}
-
-function handleSearch(val) {
-  const q = val.toLowerCase().trim();
+function applyProductFilters() {
+  const category = document.getElementById('categorySelect')?.value || 'all';
+  const query = document.getElementById('searchInput')?.value.toLowerCase().trim() || '';
   document.querySelectorAll('.product-card').forEach(card => {
     const name = card.dataset.name || '';
     const mat = card.querySelector('.product-material')?.textContent.toLowerCase() || '';
-    card.style.display = (!q || name.includes(q) || mat.includes(q)) ? '' : 'none';
+    const searchableText = `${name} ${mat}`;
+    const matchesCategory = category === 'all'
+      || card.dataset.cat === category
+      || (category === 'gold' && searchableText.includes('gold'))
+      || (category === 'silver' && searchableText.includes('silver'))
+      || (category === 'beaded' && (searchableText.includes('bead') || searchableText.includes('gemstone')));
+    const matchesSearch = !query || name.includes(query) || mat.includes(query);
+    card.style.display = matchesCategory && matchesSearch ? '' : 'none';
   });
+}
+
+function filterProducts(cat) {
+  applyProductFilters();
+  const label = CATEGORIES.find(c => c.id === cat)?.label || cat;
+  if (cat !== 'all') { showToast(`Showing ${label} products`); announce(`Filtered to ${label} category`); }
 }
 
 function initHomeFeatured() {
