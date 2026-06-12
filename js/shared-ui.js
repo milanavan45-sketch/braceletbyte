@@ -107,8 +107,7 @@ function injectSharedUI() {
 
     <div class="a11y-bar" role="region" aria-label="Accessibility tools">
       <button type="button" id="a11yLargeText" aria-pressed="false" title="Larger text">A+</button>
-      <button type="button" id="a11yHighContrast" aria-pressed="false" title="High contrast">◐</button>
-      <button type="button" id="a11yReduceMotion" aria-pressed="false" title="Reduce motion">◎</button>
+      <button type="button" id="a11yBlockOutlines" aria-pressed="false" title="Block outlines">[]</button>
     </div>
 
     <button type="button" class="chat-fab" id="chatFab" aria-expanded="false" aria-controls="chatPanel" aria-label="Open AI assistant chat">
@@ -387,15 +386,10 @@ function initA11yBar() {
     this.setAttribute('aria-pressed', String(on));
     announce(on ? 'Larger text enabled' : 'Larger text disabled');
   });
-  document.getElementById('a11yHighContrast')?.addEventListener('click', function () {
-    const on = document.documentElement.classList.toggle('high-contrast');
+  document.getElementById('a11yBlockOutlines')?.addEventListener('click', function () {
+    const on = document.documentElement.classList.toggle('block-outline-mode');
     this.setAttribute('aria-pressed', String(on));
-    announce(on ? 'High contrast enabled' : 'High contrast disabled');
-  });
-  document.getElementById('a11yReduceMotion')?.addEventListener('click', function () {
-    const on = document.documentElement.classList.toggle('reduce-motion');
-    this.setAttribute('aria-pressed', String(on));
-    announce(on ? 'Reduced motion enabled' : 'Reduced motion disabled');
+    announce(on ? 'Block outlines enabled' : 'Block outlines disabled');
   });
 }
 
