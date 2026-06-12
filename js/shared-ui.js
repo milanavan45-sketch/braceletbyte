@@ -224,23 +224,36 @@ function closeModal(id) {
 }
 
 function initTheme() {
-  const saved = localStorage.getItem('bb_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', saved);
-  updateThemeIcon(saved);
+  const saved = localStorage.getItem('bb_theme');
+  const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(saved || preferred);
 }
 
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme') || 'light';
   const next = current === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('bb_theme', next);
-  updateThemeIcon(next);
+  applyTheme(next);
   announce(next === 'dark' ? 'Dark mode on' : 'Light mode on');
+}
+
+function applyTheme(theme) {
+  const normalizedTheme = theme === 'dark' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', normalizedTheme);
+  document.documentElement.style.colorScheme = normalizedTheme;
+  updateThemeIcon(normalizedTheme);
 }
 
 function updateThemeIcon(theme) {
   const icon = document.querySelector('.theme-icon');
   if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+  const button = document.getElementById('themeToggle');
+  if (button) {
+    const dark = theme === 'dark';
+    button.setAttribute('aria-pressed', String(dark));
+    button.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    button.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  }
 }
 
 function runSplash() {
